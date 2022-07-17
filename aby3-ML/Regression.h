@@ -11,7 +11,7 @@
 #include <aby3/sh3/Sh3FixedPoint.h>
 using namespace oc;
 
-#define DEBUG_PRINT(x)
+#define DEBUG_PRINT(x) // what it is this? doing nothing?
 
 struct RegressionParam
 {
@@ -119,6 +119,7 @@ void SGD_Linear(
 	Matrix* X_test = nullptr,
 	Matrix* Y_test = nullptr)
 {
+	std::cout << X.rows() << " " << X.cols() << std::endl;
 	if (X.rows() != Y.rows() || Y.cols() != 1)
 		throw std::runtime_error(LOCATION);
 
@@ -195,7 +196,7 @@ std::array<double,2> test_logisticModel(
 	auto fxw = engine.logisticFunc(xw);
 	Matrix error = fxw - y;
 	Matrix errorT = error.transpose();
-	Matrix l2 = engine.mul(errorT, error);
+	Matrix l2 = engine.mul(errorT, error); // where l2 is used afterwords?
 
 
 	auto pp = engine.reveal(fxw);
@@ -226,6 +227,9 @@ void SGD_Logistic(
 	Matrix* X_test = nullptr,
 	Matrix* Y_test = nullptr)
 {
+	std::cout << "SGD_Logistic is called for party = "<< engine.partyIdx() << " X.rows() = " << X.rows() << " X.cols() = " << X.cols() << " params.mIterations " <<
+	params.mIterations << " params.mBatchSize" << params.mBatchSize <<  std::endl;
+	
 	if (X.rows() != Y.rows() || Y.cols() != 1)
 		throw std::runtime_error(LOCATION);
 
@@ -257,6 +261,10 @@ void SGD_Logistic(
 		DEBUG_PRINT(engine << "X[" << i << "] " << engine.reveal(XX) << std::endl);
 		DEBUG_PRINT(engine << "Y[" << i << "] " << engine.reveal(YY) << std::endl);
 		DEBUG_PRINT(engine << "W[" << i << "] " << engine.reveal(w) << std::endl);
+
+		// std::cout <<  "X[" << i << "] " << engine.reveal(XX) << std::endl;
+		// std::cout <<  "Y[" << i << "] " << engine.reveal(YY) << std::endl;
+		// std::cout <<  "W[" << i << "] " << engine.reveal(w) << std::endl;
 
 		// compute the errors on the current batch.
 		Matrix xw = engine.mul(XX, w);

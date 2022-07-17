@@ -103,15 +103,16 @@ namespace aby3
 		params.mIterations = IT;
 		params.mLearningRate = 1.0 / (1 << 3);
 
-		const Decimal D = D16;
+		const Decimal D = D16; // Mazharul: what is this?
 		aby3ML p;
 
-		p.init(pIdx, chlPrev, chlNext, toBlock(pIdx));
+		p.init(pIdx, chlPrev, chlNext, toBlock(pIdx)); // partyIdx, prev, next, seed.
 
 		//p.mPrint = cmd.isSet("print");
 
 		sf64Matrix<D> train_data, train_label, W2, test_data, test_label;
-
+		// partyIdx zero has all the inputs? why shoudn't other parties have 
+		// input as well instead of calling remoteInput<D>(0)
 		if (pIdx == 0)
 		{
 			train_data = p.localInput<D>(val_train_data);
@@ -129,15 +130,18 @@ namespace aby3
 			test_label = p.remoteInput<D>(0);
 		}
 
+		// train and test data have been prepared.
 
+		// now resetting status of the party.
 		p.mPreproNext.resetStats();
 		p.mPreproPrev.resetStats();
 
 		auto preStart = std::chrono::system_clock::now();
-
+		// preprocessing status of party. [Nothing is done here!]
 		p.preprocess((B + dim) * IT, D);
 
 		double preBytes = p.mPreproNext.getTotalDataSent() + p.mPreproPrev.getTotalDataSent();
+		std::cout << "preBytes " << preBytes << std::endl;
 
 
 		p.mNext.resetStats();
@@ -145,12 +149,16 @@ namespace aby3
 
 
 		auto start = std::chrono::system_clock::now();
-
-		if (cmd.isSet("noOnline") == false)
-			SGD_Logistic(params, p, train_data, train_label, W2);
+		// why all of the parties run the SGD?
+		if (cmd.isSet("noOnline") == false) // Mazharul: what does noOnline means?
+			SGD_Logistic(params, p, train_data, train_label, W2); // params, engine, X, Y, W. Who does the SGD?
 		//val_W2 = p.reveal(W2);
 
 		auto end = std::chrono::system_clock::now();
+		auto score = test_logisticModel(p, W2, test_data, test_label);
+		auto l2 = score[0];
+		auto percent = score[1];
+		std::cout <<  l2 << " "  << percent << std::endl;
 
 
 		//engine.sync();
@@ -166,18 +174,20 @@ namespace aby3
 			ooo << "N: " << N << " D:" << dim << " B:" << B << " IT:" << IT << " => "
 				<< (double(IT) / seconds) << "  iters/s  " << (bytes * 8 / 1024 / 2024) / seconds << " Mbps"
 				<< " offline: " << (double(IT) / preSeconds) << "  iters/s  " << (preBytes * 8 / 1024 / 2024) / preSeconds << " Mbps" << std::endl;
+			cout << " preSeconds " << preSeconds << " " << " online-seconds " << seconds << endl;
 		}
 
 
 		auto w2Val = p.reveal(W2);
+		// std::cout << "w2Val" << w2Val << std::endl; 
 
 		if (print)
 		{
 
-			for (u64 i = 0; i < dim; ++i)
-			{
-				std::cout << i << " " << gen.mModel(i, 0) << " " << w2Val(i, 0) << std::endl;
-			}
+			// for (u64 i = 0; i < dim; ++i)
+			// {
+			// 	std::cout << " i = " << i << " " << gen.mModel(i, 0) << " " << w2Val(i, 0) << std::endl;
+			// }
 		}
 
 
@@ -187,7 +197,7 @@ namespace aby3
 
 	int logistic_main_3pc_sh(oc::CLP & cmd)
 	{
-
+		//std::cout << " This is called " << std::endl;
 		auto N = cmd.getManyOr<int>("N", { 10000 });
 		auto D = cmd.getManyOr<int>("D", { 1000 });
 		auto B = cmd.getManyOr<int>("B", { 128 });
@@ -197,10 +207,11 @@ namespace aby3
 		IOService ios(cmd.isSet("p") ? 2 : 6);
 
 		std::vector<std::thread> thrds;
-		for (u64 i = 0; i < 3; ++i)
+		for (u64 i = 0; i < 3; ++i) // for each party.
 		{
 			if (cmd.isSet("p") == false || cmd.get<int>("p") == i)
 			{
+				//emplace_back ==>  Appends a new element to the end of the container.
 				thrds.emplace_back(std::thread([i, N, D, B, IT, testN, &cmd, &ios]() {
 
 					auto next = (i + 1) % 3;
@@ -258,8 +269,9 @@ namespace aby3
 			}
 		}
 
-		for (auto& t : thrds)
+		for (auto& t : thrds) // waiting for the all the thread to finish.
 			t.join();
+			
 
 		return 0;
 	}

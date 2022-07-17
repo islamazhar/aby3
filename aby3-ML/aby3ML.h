@@ -30,8 +30,8 @@ namespace aby3
 		sf64Matrix<D> localInput(const f64Matrix<D>& val)
 		{
 			std::array<u64, 2> size{ val.rows(), val.cols() };
-			mNext.asyncSendCopy(size);
-			mPrev.asyncSendCopy(size);
+			mNext.asyncSendCopy(size); // sends the whole copy?
+			mPrev.asyncSendCopy(size); // sends the whole copy?
 			sf64Matrix<D> dest(size[0],size[1]);
 			mEnc.localFixedMatrix(mRt.noDependencies(), val, dest).get();
 			return dest;
@@ -67,6 +67,7 @@ namespace aby3
 
 		void preprocess(u64 n, Decimal d)
 		{
+			// std::cout << " preprocess is called" << std::endl;
 			TODO("implement this");
 		}
 
@@ -117,7 +118,7 @@ namespace aby3
 
 
 		Sh3Piecewise mLogistic;
-
+		// Mazharul: sigmoid function
 		template<Decimal D>
 		sf64Matrix<D> logisticFunc(const sf64Matrix<D>& Y)
 		{
@@ -137,19 +138,6 @@ namespace aby3
 			mLogistic.eval<D>(mRt.noDependencies(), Y, out, mEval);
 			return out;
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		template<typename T>
 		aby3ML& operator<<(const T& v)

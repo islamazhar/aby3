@@ -16,7 +16,4 @@ public:
 	void sample(
 		Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>& X,
 		Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>& Y);
-
-
-
 };

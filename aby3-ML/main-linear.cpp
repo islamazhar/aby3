@@ -172,6 +172,7 @@ int linear_main_3pc_sh(int N, int Dim, int B, int IT, int testN, int pIdx, bool 
 
 int linear_main_3pc_sh(oc::CLP& cmd)
 {
+	std::cout << "linear_main_3pc_sh " << std::endl;
 	auto N = cmd.getManyOr<int>("N", { 10000 });
 	auto D = cmd.getManyOr<int>("D", { 1000 });
 	auto B = cmd.getManyOr<int>("B", { 128 });
