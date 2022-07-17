@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../lib/libcom-psi.a CMakeFiles/com-psi.dir/DBServer.cpp.o CMakeFiles/com-psi.dir/OblvPermutation.cpp.o CMakeFiles/com-psi.dir/OblvSwitchNet.cpp.o CMakeFiles/com-psi.dir/Table.cpp.o
+/usr/bin/ranlib ../../lib/libcom-psi.a

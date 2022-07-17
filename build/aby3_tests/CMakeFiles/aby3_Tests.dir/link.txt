@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../lib/libaby3_Tests.a CMakeFiles/aby3_Tests.dir/CircuitTests.cpp.o CMakeFiles/aby3_Tests.dir/Sh3BinaryEvaluatorTests.cpp.o CMakeFiles/aby3_Tests.dir/Sh3ConverterTests.cpp.o CMakeFiles/aby3_Tests.dir/Sh3EncryptorTests.cpp.o CMakeFiles/aby3_Tests.dir/Sh3EvaluatorTests.cpp.o CMakeFiles/aby3_Tests.dir/Sh3PiecewiseTests.cpp.o CMakeFiles/aby3_Tests.dir/Sh3RuntimeTests.cpp.o CMakeFiles/aby3_Tests.dir/SharedOTTests.cpp.o CMakeFiles/aby3_Tests.dir/aby3_tests.cpp.o
+/usr/bin/ranlib ../../lib/libaby3_Tests.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../lib/libcom-psi_Tests.a CMakeFiles/com-psi_Tests.dir/DBServerTests.cpp.o CMakeFiles/com-psi_Tests.dir/PermutaitonTests.cpp.o CMakeFiles/com-psi_Tests.dir/UnitTests.cpp.o CMakeFiles/com-psi_Tests.dir/lowMC.cpp.o
+/usr/bin/ranlib ../../lib/libcom-psi_Tests.a
