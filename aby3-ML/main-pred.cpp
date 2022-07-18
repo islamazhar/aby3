@@ -266,7 +266,7 @@ int neural_pred_main_3pc_sh(oc::CLP & cmd)
 
 	for (auto& t : thrds) // waiting for each thread to finish
 		t.join();
-	std::cout << "___DONE____JOINING_THREADS____" << std:endl;
+	std::cout << "___DONE____JOINING_THREADS____" << std::endl;
 	return 0;
 }
 
