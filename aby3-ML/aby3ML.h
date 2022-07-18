@@ -68,6 +68,7 @@ namespace aby3
 		void preprocess(u64 n, Decimal d)
 		{
 			// std::cout << " preprocess is called" << std::endl;
+			// Mazharul: why this is empty?
 			TODO("implement this");
 		}
 
@@ -136,6 +137,7 @@ namespace aby3
 
 			sf64Matrix<D> out(Y.rows(), Y.cols());
 			mLogistic.eval<D>(mRt.noDependencies(), Y, out, mEval);
+			// eval works on column by column werid! it should be x(i) or x(i,j)
 			return out;
 		}
 

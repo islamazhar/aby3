@@ -73,6 +73,7 @@ int linear_main_3pc_sh(int N, int Dim, int B, int IT, int testN, int pIdx, bool 
 	p.init(pIdx, chlPrev, chlNext, toBlock(pIdx));
 
 	sf64Matrix<D> train_data, train_label, W2, test_data, test_label;
+	// What is the difference of `sf64Matrix` with `eMatrix`?
  
 	if (pIdx == 0)
 	{
@@ -295,9 +296,6 @@ int linear_plain_main(CLP& cmd)
 	{
 		std::cout << i << " " << gen.mModel(i, 0) << " " << W2(i, 0) << std::endl;
 	}
-
-
-
 
 	return 0;
 }

@@ -8,6 +8,7 @@
 #include <tests_cryptoTools/UnitTests.h>
 #include <aby3-ML/main-linear.h>
 #include <aby3-ML/main-logistic.h>
+#include <aby3-ML/main-pred.h>
 
 #include "tests_cryptoTools/UnitTests.h"
 #include "cryptoTools/Crypto/PRNG.h"
@@ -20,6 +21,7 @@ std::vector<std::string> unitTestTag{ "u", "unitTest" };
 void help()
 {
 
+	// TODO: Add more verbose help messages.
 	std::cout << "-u                        ~~ to run all tests" << std::endl;
 	std::cout << "-u n1 [n2 ...]            ~~ to run test n1, n2, ..." << std::endl;
 	std::cout << "-u -list                  ~~ to list all tests" << std::endl;
@@ -71,6 +73,11 @@ int main(int argc, char** argv)
 		{
 			set = true;
 			logistic_main_3pc_sh(cmd);
+		}
+		if(cmd.isSet("neural"))
+		{
+			set = true;
+			neural_pred_main_3pc_sh(cmd);
 		}
 
 		if (cmd.isSet("eric"))

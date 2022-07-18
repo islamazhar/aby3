@@ -153,10 +153,24 @@ aby3-ML/CMakeFiles/aby3-ML.dir/main-logistic.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/aby3-ML.dir/main-logistic.cpp.s"
 	cd /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/aby3-ML && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/aby3-ML/main-logistic.cpp -o CMakeFiles/aby3-ML.dir/main-logistic.cpp.s
 
+aby3-ML/CMakeFiles/aby3-ML.dir/main-neural.cpp.o: aby3-ML/CMakeFiles/aby3-ML.dir/flags.make
+aby3-ML/CMakeFiles/aby3-ML.dir/main-neural.cpp.o: ../aby3-ML/main-neural.cpp
+aby3-ML/CMakeFiles/aby3-ML.dir/main-neural.cpp.o: aby3-ML/CMakeFiles/aby3-ML.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object aby3-ML/CMakeFiles/aby3-ML.dir/main-neural.cpp.o"
+	cd /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/aby3-ML && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT aby3-ML/CMakeFiles/aby3-ML.dir/main-neural.cpp.o -MF CMakeFiles/aby3-ML.dir/main-neural.cpp.o.d -o CMakeFiles/aby3-ML.dir/main-neural.cpp.o -c /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/aby3-ML/main-neural.cpp
+
+aby3-ML/CMakeFiles/aby3-ML.dir/main-neural.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/aby3-ML.dir/main-neural.cpp.i"
+	cd /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/aby3-ML && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/aby3-ML/main-neural.cpp > CMakeFiles/aby3-ML.dir/main-neural.cpp.i
+
+aby3-ML/CMakeFiles/aby3-ML.dir/main-neural.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/aby3-ML.dir/main-neural.cpp.s"
+	cd /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/aby3-ML && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/aby3-ML/main-neural.cpp -o CMakeFiles/aby3-ML.dir/main-neural.cpp.s
+
 aby3-ML/CMakeFiles/aby3-ML.dir/main-pred.cpp.o: aby3-ML/CMakeFiles/aby3-ML.dir/flags.make
 aby3-ML/CMakeFiles/aby3-ML.dir/main-pred.cpp.o: ../aby3-ML/main-pred.cpp
 aby3-ML/CMakeFiles/aby3-ML.dir/main-pred.cpp.o: aby3-ML/CMakeFiles/aby3-ML.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object aby3-ML/CMakeFiles/aby3-ML.dir/main-pred.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object aby3-ML/CMakeFiles/aby3-ML.dir/main-pred.cpp.o"
 	cd /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/aby3-ML && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT aby3-ML/CMakeFiles/aby3-ML.dir/main-pred.cpp.o -MF CMakeFiles/aby3-ML.dir/main-pred.cpp.o.d -o CMakeFiles/aby3-ML.dir/main-pred.cpp.o -c /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/aby3-ML/main-pred.cpp
 
 aby3-ML/CMakeFiles/aby3-ML.dir/main-pred.cpp.i: cmake_force
@@ -175,6 +189,7 @@ aby3__ML_OBJECTS = \
 "CMakeFiles/aby3-ML.dir/aby3ML.cpp.o" \
 "CMakeFiles/aby3-ML.dir/main-linear.cpp.o" \
 "CMakeFiles/aby3-ML.dir/main-logistic.cpp.o" \
+"CMakeFiles/aby3-ML.dir/main-neural.cpp.o" \
 "CMakeFiles/aby3-ML.dir/main-pred.cpp.o"
 
 # External object files for target aby3-ML
@@ -186,10 +201,11 @@ aby3__ML_EXTERNAL_OBJECTS =
 ../lib/libaby3-ML.a: aby3-ML/CMakeFiles/aby3-ML.dir/aby3ML.cpp.o
 ../lib/libaby3-ML.a: aby3-ML/CMakeFiles/aby3-ML.dir/main-linear.cpp.o
 ../lib/libaby3-ML.a: aby3-ML/CMakeFiles/aby3-ML.dir/main-logistic.cpp.o
+../lib/libaby3-ML.a: aby3-ML/CMakeFiles/aby3-ML.dir/main-neural.cpp.o
 ../lib/libaby3-ML.a: aby3-ML/CMakeFiles/aby3-ML.dir/main-pred.cpp.o
 ../lib/libaby3-ML.a: aby3-ML/CMakeFiles/aby3-ML.dir/build.make
 ../lib/libaby3-ML.a: aby3-ML/CMakeFiles/aby3-ML.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX static library ../../lib/libaby3-ML.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library ../../lib/libaby3-ML.a"
 	cd /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/aby3-ML && $(CMAKE_COMMAND) -P CMakeFiles/aby3-ML.dir/cmake_clean_target.cmake
 	cd /mnt/c/Users/Mazharul.Dell-Precision/Google-Drive/Research/Visa-Research/aby3/build/aby3-ML && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/aby3-ML.dir/link.txt --verbose=$(VERBOSE)
 

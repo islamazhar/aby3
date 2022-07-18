@@ -83,7 +83,7 @@ namespace aby3
 	{
 
 		PRNG prng(toBlock(1));
-		LogisticModelGen gen;
+		LogisticModelGen gen; // declared inside LinearModelGen.h
 
 		eMatrix<double> model(dim, 1);
 		for (u64 i = 0; i < std::min(dim, 10); ++i)
@@ -103,7 +103,7 @@ namespace aby3
 		params.mIterations = IT;
 		params.mLearningRate = 1.0 / (1 << 3);
 
-		const Decimal D = D16; // Mazharul: what is this?
+		const Decimal D = D16; // Mazharul: what is this? datatype 2^16?
 		aby3ML p;
 
 		p.init(pIdx, chlPrev, chlNext, toBlock(pIdx)); // partyIdx, prev, next, seed.

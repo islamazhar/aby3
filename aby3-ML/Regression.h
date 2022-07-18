@@ -301,24 +301,32 @@ void SGD_Logistic(
 	}
 }
 
-
-template<typename Eng>
-typename Eng::Matrix pred_neural(Eng& eng, typename Eng::Matrix& X, std::vector<typename Eng::Matrix>& W)
+// Mazharul: This is the place for neural network pred.
+template<typename Engine, typename Matrix>
+void pred_neural(Engine& eng, Matrix& X, std::vector<Matrix>& W)
 {
 
 	auto layers = W.size() - 1;
 
 	auto Xi = X;
+	// std::cout << "layers " << layers << std::endl;
 	for (u64 i = 0; i < layers; ++i)
 	{
-		auto Y = eng.mul(Xi, W[i]);
-		Xi = eng.reluFunc(Y);
+		auto Y = eng.mul(Xi, W[i]); 
+		Y = Y.transpose(); // Xi = [N x D] W[i] = [D x D]  = [N x D]
+		// add support  for convolution to eng.
+		// Xi = eng.reluFunc(Y);
+		//std::cout << "inside pred_neural func; i = " << i << " Y.cols " << Y.cols() << " Y rows " << Y.rows() << std::endl;
+		Xi = eng.logisticFunc(Y);
+		Xi = Xi.transpose(); // [ N x D ]
+		//for(u64 j=0; j < Y.cols(); ++j) {
+		//		Xi(j) = eng.logisticFunc(Y(j)); // seems logisticFunc can not operate on a batch.
+		//}
 	}
 
-	auto Y = eng.mul(Xi, W.back());
-	Y = eng.argMax(Y);
-
-	return std::move(Y);
+	// auto Y = eng.mul(Xi, W.back());
+	// Y = eng.argMax(Y); // `argMax` is also not present.
+	// std::move(Y); // what does move func does?
 }
 
 
