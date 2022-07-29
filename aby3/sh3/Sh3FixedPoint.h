@@ -6,6 +6,7 @@ namespace aby3
 
 	enum Decimal
 	{
+		// this represents number of bits representing the fractional part\
 		D0 = 0,
 		D8 = 8,
 		D16 = 16,
@@ -280,6 +281,7 @@ namespace aby3
 	template<Decimal D>
 	struct sf64
 	{
+		// `s` refers to encrypted values like secret-shared 
 		static const Decimal mDecimal = D;
 
 		using value_type = si64::value_type;
