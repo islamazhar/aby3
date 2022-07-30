@@ -6,7 +6,7 @@ namespace aby3
 
 	enum Decimal
 	{
-		// this represents number of bits representing the fractional part\
+		// this represents number of bits representing the fractional part
 		D0 = 0,
 		D8 = 8,
 		D16 = 16,
