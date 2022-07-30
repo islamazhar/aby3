@@ -39,7 +39,7 @@ namespace aby3
 		auto IT = cmd.getManyOr<int>("I", { 10000 });
 
         PRNG prng(toBlock(1));
-        std::cout << " N = " << N << " D = " << D << " B " << B << " IT " << IT << std::endl;    
+        // std::cout << " N = " << N << " D = " << D << " B " << B << " IT " << IT << std::endl; // why it is showing error.
     }
     int nn_plain_main(oc::CLP& cmd)
     {

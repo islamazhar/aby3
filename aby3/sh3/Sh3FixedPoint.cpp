@@ -5,6 +5,7 @@
 #include <cryptoTools/Common/BitVector.h>
 namespace aby3
 {
+    // what is this?
 	template<typename T, Decimal D>
 	fp<T, D> fp<T, D>::operator*(const fp<T, D>& rhs) const
 	{
@@ -91,14 +92,21 @@ namespace aby3
 	template struct fp<i64, D16>;
 	template struct fp<i64, D32>;
 
+    template struct fp<i32, D16>;
+
+
 	template struct sf64<D0>;
 	template struct sf64<D8>;
 	template struct sf64<D16>;
 	template struct sf64<D32>;
 
+    template struct sf32<D16>;
+
 	template struct sf64Matrix<D0>;
 	template struct sf64Matrix<D8>;
 	template struct sf64Matrix<D16>;
 	template struct sf64Matrix<D32>;
+
+    //template struct sf32Matrix<D16>;
 
 }

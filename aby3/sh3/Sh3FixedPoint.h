@@ -478,4 +478,206 @@ namespace aby3
 		return row;
 	}
 
+    //// newly added ////////
+    template<Decimal D>
+    struct sf32
+    {
+        // `s` refers to si32 being encrypted values as in secretly shared.
+        static const Decimal mDecimal = D;
+
+        using value_type = si32::value_type;
+        si32 mShare;
+
+        sf32() = default;
+        sf32(const sf32<D>&) = default;
+        sf32(sf32<D>&&) = default;
+        sf32(const std::array<value_type, 2>& d) :mShare(d) {}
+        sf32(const Ref<sf32<D>>& s) {
+            mShare.mData[0] = *s.mData[0];
+            mShare.mData[1] = *s.mData[1];
+        }
+
+        sf32<D>& operator=(const sf32<D>& copy)
+        {
+            mShare = copy.mShare; // si32 == operator is ambiguous.
+            return *this;
+        }
+
+        sf32<D> operator+(const sf32<D>& rhs) const
+        {
+            sf32<D> r;
+            r.mShare = mShare + rhs.mShare;
+            return r;
+        }
+        sf32<D> operator-(const sf32<D>& rhs) const
+        {
+            sf32<D> r;
+            r.mShare = mShare - rhs.mShare;
+            return r;
+        }
+
+        value_type& operator[](u64 i) { return mShare[i]; }
+        const value_type& operator[](u64 i) const { return mShare[i]; }
+
+
+        si32& i32Cast() { return mShare; };
+        const si32& i32Cast() const { return mShare; };
+    };
+
+
+    template<Decimal D>
+    struct sf32Matrix : private si32Matrix
+    {
+        static const Decimal mDecimal = D;
+
+        struct ConstRow { const sf32Matrix<D>& mMtx; const u64 mIdx; };
+        struct Row { sf32Matrix<D>& mMtx; const u64 mIdx;  const Row& operator=(const Row& row); const ConstRow& operator=(const ConstRow& row); };
+
+        struct ConstCol { const sf32Matrix<D>& mMtx; const u64 mIdx; };
+        struct Col { sf32Matrix<D>& mMtx; const u64 mIdx; const Col& operator=(const Col& col); const ConstCol& operator=(const ConstCol& row); };
+
+        sf32Matrix() = default;
+        sf32Matrix(u64 xSize, u64 ySize)
+        {
+            resize(xSize, ySize);
+        }
+
+        void resize(u64 xSize, u64 ySize)
+        {
+            mShares[0].resize(xSize, ySize);
+            mShares[1].resize(xSize, ySize);
+        }
+
+
+        u64 rows() const { return mShares[0].rows(); }
+        u64 cols() const { return mShares[0].cols(); }
+        u64 size() const { return mShares[0].size(); }
+
+        Ref<sf32<D>> operator()(u64 x, u64 y)
+        {
+            typename sf32<D>::value_type& s0 = mShares[0](x, y);
+            typename sf32<D>::value_type& s1 = mShares[1](x, y);
+
+            return Ref<sf32<D>>(s0, s1);
+        }
+
+        Ref<sf32<D>> operator()(u64 xy)
+        {
+            auto& s0 = static_cast<typename sf32<D>::value_type&>(mShares[0](xy));
+            auto& s1 = static_cast<typename sf32<D>::value_type&>(mShares[1](xy));
+
+            return Ref<sf32<D>>(s0, s1);
+        }
+
+        const sf32Matrix<D>& operator=(const sf32Matrix<D>& B)
+        {
+            mShares = B.mShares;
+            return B;
+        }
+
+
+        sf32Matrix<D>& operator+=(const sf32Matrix<D>& B)
+        {
+            mShares[0] += B.mShares[0];
+            mShares[1] += B.mShares[1];
+            return *this;
+        }
+
+
+        sf32Matrix<D>& operator-=(const sf32Matrix<D>& B)
+        {
+            mShares[0] -= B.mShares[0];
+            mShares[1] -= B.mShares[1];
+            return *this;
+        }
+
+        sf32Matrix<D> operator+(const sf32Matrix<D>& B) const
+        {
+            sf32Matrix<D> r = *this;
+            r += B;
+            return r;
+        }
+        sf32Matrix<D> operator-(const sf32Matrix<D>& B) const
+        {
+            sf32Matrix<D> r = *this;
+            r -= B;
+            return r;
+        }
+
+        sf32Matrix<D> transpose() const
+        {
+            sf32Matrix<D> r = *this;
+            r.transposeInPlace();
+            return r;
+        }
+        void transposeInPlace()
+        {
+            mShares[0].transposeInPlace();
+            mShares[1].transposeInPlace();
+        }
+
+
+        Row row(u64 i) { return Row{ *this, i }; }
+        Col col(u64 i) { return Col{ *this, i }; }
+        ConstRow row(u64 i) const { return ConstRow{ *this, i }; }
+        ConstCol col(u64 i) const { return ConstCol{ *this, i }; }
+
+        bool operator !=(const sf32Matrix<D>& b) const
+        {
+            return !(*this == b);
+        }
+
+        bool operator ==(const sf32Matrix<D> & b) const
+        {
+            return (rows() == b.rows() &&
+                    cols() == b.cols() &&
+                    mShares == b.mShares);
+        }
+
+
+        sf32Matrix& i32Cast() { return static_cast<sf32Matrix&>(*this); }
+        const sf32Matrix& i32Cast() const { return static_cast<const sf32Matrix&>(* this); }
+
+
+        eMatrix<i32>& operator[](u64 i) { return mShares[i]; }
+        const eMatrix<i32>& operator[](u64 i) const { return mShares[i]; }
+    };
+
+
+    template<Decimal D>
+    inline const typename sf32Matrix<D>::Row& sf32Matrix<D>::Row::operator=(const Row & row)
+    {
+        mMtx.mShares[0].row(mIdx) = row.mMtx.mShares[0].row(row.mIdx);
+        mMtx.mShares[1].row(mIdx) = row.mMtx.mShares[1].row(row.mIdx);
+
+        return row;
+    }
+
+    template<Decimal D>
+    inline const typename sf32Matrix<D>::ConstRow& sf32Matrix<D>::Row::operator=(const ConstRow & row)
+    {
+        mMtx.mShares[0].row(mIdx) = row.mMtx.mShares[0].row(row.mIdx);
+        mMtx.mShares[1].row(mIdx) = row.mMtx.mShares[1].row(row.mIdx);
+        return row;
+    }
+
+
+    template<Decimal D>
+    inline const typename sf32Matrix<D>::Col& sf32Matrix<D>::Col::operator=(const Col & row)
+    {
+        mMtx.mShares[0].col(mIdx) = row.mMtx.mShares[0].col(row.mIdx);
+        mMtx.mShares[1].col(mIdx) = row.mMtx.mShares[1].col(row.mIdx);
+
+        return row;
+    }
+
+    template<Decimal D>
+    inline const typename sf32Matrix<D>::ConstCol& sf32Matrix<D>::Col::operator=(const ConstCol & row)
+    {
+        mMtx.mShares[0].col(mIdx) = row.mMtx.mShares[0].col(row.mIdx);
+        mMtx.mShares[1].col(mIdx) = row.mMtx.mShares[1].col(row.mIdx);
+        return row;
+    }
+
+
 }
