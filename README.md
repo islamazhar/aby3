@@ -2,6 +2,7 @@ This is  clone of [ABY 3](https://github.com/ladnir/aby3) with two additional
 enhancements added.
 - `swish` activation function
 - support for 32 bit representation for fixed point.
+- updating the neural network pred code.
 
 
 The rest of the README is copied from the original repository.
