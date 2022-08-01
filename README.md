@@ -1,7 +1,12 @@
+This is  clone of [ABY 3](https://github.com/ladnir/aby3) with two additional 
+enhancements added.
+- `swish` activation function
+- support for 32 bit representation for fixed point.
+
+
+The rest of the README is copied from the original repository.
+
 # ABY 3 and Applications
- 
-## Introduction
- 
 This library provides the semi-honest implementation of [ABY 3](https://eprint.iacr.org/2018/403.pdf) and [Fast Database Joins for Secret Shared Data](https://eprint.iacr.org/2019/518.pdf).
 
 The repo includes the following application:
