@@ -320,9 +320,9 @@ f64Matrix<D8> reveal(sf64Matrix<D8>& A, CommPkg& comm)
     comm.mNext.recv((i64*)ret.mData.data(), ret.size());
     comm.mPrev.recv((i64*)A1.mData.data(), A1.size());
 
-    if (A1.i64Cast() != A[1])
+    if (A1.ValueTypeCast() != A[1])
     {
-        oc::lout << "A1  " << A1.i64Cast() << "\nA1' " << A[1] << std::endl;
+        oc::lout << "A1  " << A1.ValueTypeCast() << "\nA1' " << A[1] << std::endl;
         throw std::runtime_error("inconistent shares. " LOCATION);
     }
 
@@ -469,7 +469,7 @@ void Sh3_Evaluator_asyncMul_matrixFixed_test(const oc::CLP& cmd)
             for (u64 i = 0; i < a.size(); ++i) a(i) = (prng.get<u32>() >> 8) / 100.0;
             for (u64 i = 0; i < b.size(); ++i) b(i) = (prng.get<u32>() >> 8) / 100.0;
             c = a * b;
-            auto c64 = a.i64Cast() * b.i64Cast();
+            auto c64 = a.ValueTypeCast() * b.ValueTypeCast();
 
             A[idx][0].resize(size, size);
             A[idx][1].resize(size, size);
@@ -487,13 +487,13 @@ void Sh3_Evaluator_asyncMul_matrixFixed_test(const oc::CLP& cmd)
                 sync(rt.mComm);
                 enc.revealAll(rt, A[idx], aa).get();
                 auto aa2 = reveal(A[idx], rt.mComm);
-                if (aa.i64Cast() != a.i64Cast())
+                if (aa.ValueTypeCast() != a.ValueTypeCast())
                 {
                     std::cout << " failure A1 " << std::endl;
                     std::cout << "a   " << a << std::endl;
                     std::cout << "aa  " << aa << std::endl;
                 }
-                if (aa2.i64Cast() != a.i64Cast())
+                if (aa2.ValueTypeCast() != a.ValueTypeCast())
                 {
                     std::cout << " failure A2 " << std::endl;
                     std::cout << "aa2 " << aa2 << std::endl;
@@ -530,12 +530,12 @@ void Sh3_Evaluator_asyncMul_matrixFixed_test(const oc::CLP& cmd)
 
             if (idx == 0)
             {
-                if (aa2.i64Cast() != a.i64Cast())
+                if (aa2.ValueTypeCast() != a.ValueTypeCast())
                 {
                     std::cout << " failure AA* " << std::endl;
                 }
 
-                if (aa.i64Cast() != a.i64Cast())
+                if (aa.ValueTypeCast() != a.ValueTypeCast())
                 {
                     std::cout << " failure AA " << std::endl;
                 }
@@ -739,9 +739,9 @@ void createSharing(
 void createSharing(
     PRNG& prng,
     i64Matrix& value,
-    sbMatrix& s0,
-    sbMatrix& s1,
-    sbMatrix& s2)
+    sbMatrix<i64>& s0,
+    sbMatrix<i64>& s1,
+    sbMatrix<i64>& s2)
 {
 
     //s0.mShares[0] = value;
@@ -818,7 +818,7 @@ void sh3_asyncArithBinMul_test(const oc::CLP& cmd)
         c1(size, 1),
         c2(size, 1);
 
-    sbMatrix
+    sbMatrix<i64>
         b0(size, 1),
         b1(size, 1),
         b2(size, 1);
@@ -957,7 +957,7 @@ void sh3_asyncPubArithBinMul_test(const oc::CLP& cmd)
 
     eMatrix<i64> b(size, 1), c(size, 1), cc(size, 1);
 
-    sbMatrix
+    sbMatrix<i64>
         b0(size, 1),
         b1(size, 1),
         b2(size, 1);

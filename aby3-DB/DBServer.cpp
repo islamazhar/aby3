@@ -93,7 +93,7 @@ namespace osuCrypto
             mRt.mComm.mNext.asyncSendCopy(t.mColumns[i].mName);
             mRt.mComm.mPrev.asyncSendCopy(t.mColumns[i].mName);
 
-            aby3::sbMatrix& a1 = ret.mColumns[i];
+            aby3::sbMatrix<i64>& a1 = ret.mColumns[i];
 
             mEnc.localBinMatrix(mRt.mComm, t.mColumns[i].mData, a1);
         }
@@ -363,7 +363,7 @@ namespace osuCrypto
 
         if (query.isNoReveal())
         {
-            aby3::Sh3Converter convt;
+            aby3::Sh3Converter<i64> convt;
             convt.toBinaryMatrix(intersectionFlags, C.mColumns.back());
             C.mColumns.back().mName = query.mNoRevealName;
 
@@ -1056,7 +1056,7 @@ namespace osuCrypto
         mRt.runOneRound();
         auto cir = getQueryCircuit(leftCircuitInput, rightCircuitInput, circuitOutput, query);
 
-        aby3::Sh3BinaryEvaluator eval;
+        aby3::Sh3BinaryEvaluator<i64> eval;
 
         if (DBServer_debug)
             eval.enableDebug(mIdx, mRt.mComm.mPrev, mRt.mComm.mNext);
@@ -1074,7 +1074,7 @@ namespace osuCrypto
         t2.get();
         eval.setInput(i++, A[2]);
 
-        std::vector<std::vector<aby3::Sh3BinaryEvaluator::DEBUG_Triple>>plainWires;
+        std::vector<std::vector<aby3::Sh3BinaryEvaluator<i64>::DEBUG_Triple>>plainWires;
         eval.distributeInputs();
 
         if (DBServer_debug)
@@ -1279,7 +1279,7 @@ namespace osuCrypto
         mRt.runOneRound();
         auto cir = getBasicCompareCircuit(leftJoinCol, {});
 
-        aby3::Sh3BinaryEvaluator eval;
+        aby3::Sh3BinaryEvaluator<i64> eval;
 
         if (DBServer_debug)
             eval.enableDebug(mIdx, mRt.mComm.mPrev, mRt.mComm.mNext);
@@ -1293,7 +1293,7 @@ namespace osuCrypto
         t2.get();
         eval.setInput(3, A[2]);
 
-        std::vector<std::vector<aby3::Sh3BinaryEvaluator::DEBUG_Triple>>plainWires;
+        std::vector<std::vector<aby3::Sh3BinaryEvaluator<i64>::DEBUG_Triple>>plainWires;
         eval.distributeInputs();
 
         if (DBServer_debug)
@@ -1312,12 +1312,12 @@ namespace osuCrypto
     aby3::i64Matrix DBServer::computeKeys(span<SharedTable::ColRef> cols, span<u64> reveals)
     {
         aby3::i64Matrix ret;
-        std::vector<aby3::Sh3BinaryEvaluator> binEvals(cols.size());
+        std::vector<aby3::Sh3BinaryEvaluator<i64>> binEvals(cols.size());
 
         auto blockSize = mLowMCCir.mInputs[0].size();
         auto rounds = mLowMCCir.mInputs.size() - 1;
 
-        aby3::sbMatrix oprfRoundKey(1, blockSize);// , temp;
+        aby3::sbMatrix<i64> oprfRoundKey(1, blockSize);// , temp;
         for (u64 i = 0; i < cols.size(); ++i)
         {
             //auto shareCount = tables[i]->mKeys.shareCount();

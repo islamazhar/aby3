@@ -7,7 +7,7 @@
 using namespace aby3;
 using namespace oc;
 
-std::array<u8, 2> getBitShare(u64 row, u64 bitIdx, const sbMatrix& x)
+std::array<u8, 2> getBitShare(u64 row, u64 bitIdx, const sbMatrix<i64>& x)
 {
     std::array<u8, 2> ret;
 
@@ -67,7 +67,7 @@ std::array<u8, 2> getBitShare(u64 row, u64 bitIdx, const sPackedBin& x)
 //}
 //
 //
-//void trim(sbMatrix& a)
+//void trim(sbMatrix<i64>& a)
 //{
 //    auto bits = a.bitCount();
 //    auto mtxLast = (bits + 63) / 64 - 1;
@@ -174,7 +174,7 @@ void Sh3_convert_b64Matrix_PackedBin_test()
         auto bits = prng.get<u64>() % mod + 1;
         Sh3Encryptor enc;
 
-        sbMatrix mtx(shares, bits), mtxDest;
+        sbMatrix<i64> mtx(shares, bits), mtxDest;
         sPackedBin pack(shares, bits), packDest;
 
         enc.init(0, ZeroBlock, OneBlock);
@@ -187,7 +187,7 @@ void Sh3_convert_b64Matrix_PackedBin_test()
 
         //trim(pack);
 
-        Sh3Converter convt;
+        Sh3Converter<i64> convt;
         packDest.mShares[0].setZero();
         packDest.mShares[1].setZero();
         mtxDest.mShares[0].setZero();
@@ -292,7 +292,7 @@ void Sh3_trim_test()
         auto shares = prng.get<u64>() % mod + 1;
         auto bits = prng.get<u64>() % mod + 1;
 
-        sbMatrix mtx(shares, bits), mtxDest;
+        sbMatrix<i64> mtx(shares, bits), mtxDest;
         sPackedBin pack(shares, bits), packDest;
 
         memset(mtx.mShares[0].data(), ~0, mtx.mShares[0].size() * sizeof(i64));

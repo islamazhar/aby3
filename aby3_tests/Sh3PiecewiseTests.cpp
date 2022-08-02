@@ -27,7 +27,7 @@ void Sh3_Piecewise_plain_test(const oc::CLP& cmd)
 	}
 
 	{
-		Sh3Piecewise maxZero;// (dec);
+		Sh3Piecewise<i64> maxZero;// (dec);
 		maxZero.mThresholds.resize(1, 0);
 		maxZero.mCoefficients.resize(2);
 		maxZero.mCoefficients[1].resize(2, 0);
@@ -50,7 +50,7 @@ void Sh3_Piecewise_plain_test(const oc::CLP& cmd)
 
 	// Piecewise linear logistic function
 	{
-		Sh3Piecewise  ll;// (dec);
+		Sh3Piecewise<i64>  ll;// (dec);
 		ll.mThresholds.resize(2, 0);
 
 		ll.mThresholds[0] = -0.5;
@@ -158,7 +158,7 @@ void Sh3_Piecewise_test(const oc::CLP& cmd)
 	for (u64 t = 0; t < trials; ++t)
 	{
 
-		Sh3Piecewise pw0, pw1, pw2;
+		Sh3Piecewise<i64> pw0, pw1, pw2;
 
 		pw0.DebugRt.init(0, dcomms[0]);
 		pw1.DebugRt.init(1, dcomms[1]);

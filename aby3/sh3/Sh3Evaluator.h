@@ -74,7 +74,7 @@ namespace aby3
 			const sf64<D>& B,
 			sf64<D>& C)
 		{
-			return asyncMul(dependency, A.i64Cast(), B.i64Cast(), C.i64Cast(), D);
+			return asyncMul(dependency, A.ValueTypeCast(), B.ValueTypeCast(), C.ValueTypeCast(), D);
 		}
 
 		template<Decimal D>
@@ -85,7 +85,7 @@ namespace aby3
 			sf64Matrix<D>& C,
 			u64 shift)
 		{
-			return asyncMul(dependency, A.i64Cast(), B.i64Cast(), C.i64Cast(), D + shift);
+			return asyncMul(dependency,A.ValueTypeCast(), B.ValueTypeCast(), C.ValueTypeCast(), D + shift);
 		}
 
 		template<Decimal D>
@@ -95,7 +95,7 @@ namespace aby3
 			const sf64Matrix<D>& B,
 			sf64Matrix<D>& C)
 		{
-			return asyncMul(dependency, A.i64Cast(), B.i64Cast(), C.i64Cast(), D);
+			return asyncMul(dependency,A.ValueTypeCast(), B.ValueTypeCast(), C.ValueTypeCast(), D);
 		}
 
         template<typename ValueType>

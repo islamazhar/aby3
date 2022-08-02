@@ -118,7 +118,7 @@ void Sh3_Encryptor_IO_test()
             failed = true;
         }
 
-        sbMatrix bShr(trials, trials * 64);
+        sbMatrix<i64> bShr(trials, trials * 64);
         e.localBinMatrix(c, m, bShr);
         e.reveal(c, bShr, mm);
 
@@ -194,7 +194,7 @@ void Sh3_Encryptor_IO_test()
         e.remoteIntMatrix(c, mShr);
         e.reveal(c, 0, mShr);
 
-        sbMatrix bShr(trials, trials * 64);
+        sbMatrix<i64> bShr(trials, trials * 64);
         e.remoteBinMatrix(c, bShr);
         e.reveal(c, 0, bShr);
         
@@ -349,7 +349,7 @@ void Sh3_Encryptor_asyncIO_test()
 			failed = true;
 		}
 
-        sbMatrix bShr(trials, trials * 64);
+        sbMatrix<i64> bShr(trials, trials * 64);
         task = e.localBinMatrix(task, m, bShr);
         e.reveal(task, bShr, mm).get();
 
@@ -420,7 +420,7 @@ void Sh3_Encryptor_asyncIO_test()
         task = e.remoteIntMatrix(task, mShr);
         e.reveal(task, 0, mShr).get();
 
-        sbMatrix bShr(trials, trials * 64);
+        sbMatrix<i64> bShr(trials, trials * 64);
 		task = e.remoteBinMatrix(task, bShr);
         e.reveal(task, 0, bShr).get();
 

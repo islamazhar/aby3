@@ -40,7 +40,7 @@ using namespace aby3;
 //    s2.mShares[1] = s1.mShares[0];
 //}
 
-//Lynx::Matrix toLynx(const sbMatrix& A)
+//Lynx::Matrix toLynx(const sbMatrix<i64>& A)
 //{
 //    Lynx::Matrix r(A.rows(), A.i64Cols());
 //    r.mShares[0] = A.mShares[0];
@@ -100,7 +100,7 @@ using namespace aby3;
 //    }
 //}
 
-std::array<oc::Matrix<i64>, 3> getShares(sbMatrix& S, Sh3Runtime& rt, CommPkg& comm)
+std::array<oc::Matrix<i64>, 3> getShares(sbMatrix<i64>& S, Sh3Runtime& rt, CommPkg& comm)
 {
     std::array<oc::Matrix<i64>, 3> r;
 
@@ -170,7 +170,7 @@ void Sh3_BinaryEngine_test(
     std::array < std::vector<oc::Matrix<i64>>, 3> CC;
     std::array < std::vector<oc::Matrix<i64>>, 3> CC2;
     std::array<std::atomic<int>, 3> ac;
-    Sh3BinaryEvaluator evals[3];
+    Sh3BinaryEvaluator<i64> evals[3];
 
     //block tag = oc::sysRandomSeed();
 
@@ -197,8 +197,8 @@ void Sh3_BinaryEngine_test(
 
         Sh3Runtime rt(pIdx, comms[pIdx]);
 
-        sbMatrix A(width, aSize), B(width, bSize), C(width, cSize);
-        sbMatrix Ar(1, aSize);
+        sbMatrix<i64> A(width, aSize), B(width, bSize), C(width, cSize);
+        sbMatrix<i64> Ar(1, aSize);
 
         Sh3Encryptor enc;
         enc.init(pIdx, toBlock(pIdx), toBlock((pIdx + 1) % 3));

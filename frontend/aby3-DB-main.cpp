@@ -99,14 +99,14 @@ void DB_Intersect(u32 rows, u32 cols, bool sum)
 		if (sum)
 		{
 
-			Sh3BinaryEvaluator eval;
+			Sh3BinaryEvaluator<i64> eval;
 
 			BetaLibrary lib;
 			BetaCircuit* cir = lib.int_int_add(64, 64, 64);
 
 			auto task = srvs[i].mRt.noDependencies();
 
-			sbMatrix AA(C.rows(), 64), BB(C.rows(), 64), CC(C.rows(), 64);
+			sbMatrix<i64> AA(C.rows(), 64), BB(C.rows(), 64), CC(C.rows(), 64);
 			task = eval.asyncEvaluate(task, cir, srvs[i].mEnc.mShareGen, { &AA, &BB }, { &CC });
 
 			Sh3Encryptor enc;
@@ -381,12 +381,12 @@ void DB_threat(u32 rows, u32 setCount)
 		if (i == 0)
 			t.setTimePoint("union");
 
-		Sh3BinaryEvaluator eval;
+		Sh3BinaryEvaluator<i64> eval;
 
 
 		auto task = srvs[i].mRt.noDependencies();
 
-		sbMatrix AA(C.rows(), 32), BB(C.rows(), 32), CC(C.rows(), 32);
+		sbMatrix<i64> AA(C.rows(), 32), BB(C.rows(), 32), CC(C.rows(), 32);
 		task = eval.asyncEvaluate(task, cir, srvs[i].mEnc.mShareGen, { &AA, &BB }, { &CC });
 		task = eval.asyncEvaluate(task, cir, srvs[i].mEnc.mShareGen, { &AA, &BB }, { &CC });
 		task.get();
@@ -490,7 +490,7 @@ i64 Sh3_add_test(u64 n)
 
 		Sh3Runtime rt(i, comms[i]);
 
-		sbMatrix A(width, aSize), B(width, bSize), C(width, cSize);
+		sbMatrix<i64> A(width, aSize), B(width, bSize), C(width, cSize);
 
 		Sh3Encryptor enc;
 		enc.init(i, toBlock(i), toBlock(i + 1));
@@ -502,7 +502,7 @@ i64 Sh3_add_test(u64 n)
 
 		task = enc.localBinMatrix(rt.noDependencies(), b, B);
 
-		Sh3BinaryEvaluator eval;
+		Sh3BinaryEvaluator<i64> eval;
 
 		t.setTimePoint("eval");
 
@@ -518,7 +518,7 @@ i64 Sh3_add_test(u64 n)
 
 		Sh3Runtime rt(i, comms[i]);
 
-		sbMatrix A(width, aSize), B(width, bSize), C(width, cSize);
+		sbMatrix<i64> A(width, aSize), B(width, bSize), C(width, cSize);
 
 		Sh3Encryptor enc;
 		enc.init(i, toBlock(i), toBlock((i + 1) % 3));
@@ -529,7 +529,7 @@ i64 Sh3_add_test(u64 n)
 		enc.remoteBinMatrix(rt.noDependencies(), A).get();
 		task = enc.remoteBinMatrix(rt.noDependencies(), B);
 
-		Sh3BinaryEvaluator eval;
+		Sh3BinaryEvaluator<i64> eval;
 
 		task = eval.asyncEvaluate(task, cir, enc.mShareGen, { &A, &B }, { &C });
 

@@ -118,7 +118,7 @@ namespace aby3
 		}
 
 
-		Sh3Piecewise mLogistic;
+		Sh3Piecewise<i64> mLogistic;
 		// Mazharul: sigmoid function
 		template<Decimal D>
 		sf64Matrix<D> logisticFunc(const sf64Matrix<D>& Y)

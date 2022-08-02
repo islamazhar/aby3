@@ -87,7 +87,7 @@ namespace aby3
 			f64Matrix<D>& outputs,
 			bool print = false)
 		{
-			eval(inputs.i64Cast(), outputs.i64Cast(), D, print);
+			eval(inputs.ValueTypeCast(), outputs.ValueTypeCast(), D, print);
 		}
 
 		void eval(
@@ -113,7 +113,7 @@ namespace aby3
 			Sh3Evaluator& evaluator, 
 			bool print = false)
 		{
-			return eval(dep, inputs.i64Cast(), outputs.i64Cast(), D, evaluator, print);
+			return eval(dep, inputs.ValueTypeCast(), outputs.ValueTypeCast(), D, evaluator, print);
 		}
 
 		std::vector<sbMatrix<ValueType>> mInputRegions;

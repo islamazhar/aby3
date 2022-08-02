@@ -176,7 +176,7 @@ namespace aby3
 		fpMatrix<ValueType, D> operator*(const fpMatrix<ValueType, D>& rhs) const
 		{
 			fpMatrix<ValueType, D> ret;
-			eMatrix<ValueType>& view = ret.i64Cast();
+			eMatrix<ValueType>& view = ret.ValueTypeCast();
 			const eMatrix<ValueType>& l = ValueTypeCast();
 			const eMatrix<ValueType>& r = rhs.ValueTypeCast();
 			view = l * r;
