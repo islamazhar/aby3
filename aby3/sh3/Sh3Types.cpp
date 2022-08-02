@@ -52,3 +52,7 @@ void aby3::details::trimImpl(oc::MatrixView<u8> a, u64 bits)
             a(j, i) = 0;
     }
 }
+
+
+
+

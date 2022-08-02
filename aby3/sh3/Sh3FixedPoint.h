@@ -13,40 +13,18 @@ namespace aby3
 		D32 = 32
 	};
 
-	//template<Decimal D>
-	//using f64 = fpml::fixed_point<i64, 63 - D, D>;
+
 	struct monostate {};
 
 
 
-	template<typename T, Decimal D>
+	template<typename ValueType, Decimal D>
 	struct fp
 	{
 
-		//struct ref {
-		//	static const Decimal mDecimal = D;
-		//	T& mValue;
-
-		//	ref(const fp& v) :mValue((T&)v.mValue) {}
-		//	ref(T* v, monostate) :mValue(*v) {}
-		//	ref() = delete;
-		//	ref(const ref& r) = default;
-		//	ref(ref&& r) = default;
-
-
-		//	const ref operator=(const ref& r) { mValue = r.mValue; return r; }
-		//	const fp& operator=(const fp& v) { mValue = v.mValue; return v; }
-
-		//	fp promote() const { return fp(mValue, monostate{}); }
-		//	operator fp() const { return promote(); }
-		//	explicit operator double() const { return static_cast<double>(promote()); } 
-		//};
-
-
-
 		static const Decimal mDecimal = D;
 
-		T mValue = 0;
+		ValueType mValue = 0;
 
 		fp() = default;
 		fp(const fp&) = default;
@@ -54,9 +32,6 @@ namespace aby3
 		fp(const double v) {
 			*this = v;
 		}
-
-
-
 
 		fp operator+(const fp& rhs) const {
 			return { mValue + rhs.mValue, monostate{} };
@@ -66,8 +41,8 @@ namespace aby3
 			return { mValue - rhs.mValue, monostate{} };
 		}
 		fp operator*(const fp& rhs) const;
-		fp operator>>(i64 shift) const { return { mValue >> shift, monostate{} }; }
-		fp operator<<(i64 shift) const { return { mValue << shift, monostate{} }; }
+		fp operator>>(ValueType shift) const { return { mValue >> shift, monostate{} }; }
+		fp operator<<(ValueType shift) const { return { mValue << shift, monostate{} }; }
 
 
 		fp& operator+=(const fp& rhs) {
@@ -89,12 +64,12 @@ namespace aby3
 
 		explicit operator double() const
 		{
-			return mValue / double(T(1) << mDecimal);
+			return mValue / double(ValueType(1) << mDecimal);
 		}
 
 		void operator=(const double& v)
 		{
-			mValue = T(v * (T(1) << D));
+			mValue = ValueType(v * (ValueType(1) << D));
 		}
 
 		bool operator==(const fp & v) const
@@ -107,7 +82,7 @@ namespace aby3
 		}
 
 	private:
-		fp(T v, monostate)
+		fp(ValueType v, monostate)
 			: mValue(v)
 		{}
 	};
@@ -116,10 +91,10 @@ namespace aby3
 
 
 	template<Decimal D>
-	using f64 = fp<i64, D>;
+	using f64 = fp<i64, D>; // remove this??
 
-	template<typename T, Decimal D>
-	std::ostream& operator<<(std::ostream & o, const fp<T, D> & f)
+	template<typename ValueType, Decimal D>
+	std::ostream& operator<<(std::ostream & o, const fp<ValueType, D> & f)
 	{
 		auto mask = ((1ull << f.mDecimal) - 1);
 		std::stringstream ss;
@@ -157,16 +132,16 @@ namespace aby3
 	;
 
 
-	template<typename T, Decimal D>
+	template<typename ValueType, Decimal D>
 	struct fpMatrix
 	{
-		using value_type = fp<T, D>;
+		using value_type = fp<ValueType, D>;
 		static const Decimal mDecimal = D;
 		eMatrix<value_type> mData;
 
 		fpMatrix() = default;
-		fpMatrix(const fpMatrix<T, D>&) = default;
-		fpMatrix(fpMatrix<T, D>&&) = default;
+		fpMatrix(const fpMatrix<ValueType, D>&) = default;
+		fpMatrix(fpMatrix<ValueType, D>&&) = default;
 
 		fpMatrix(u64 xSize, u64 ySize)
 			: mData(xSize, ySize)
@@ -183,48 +158,48 @@ namespace aby3
 		u64 size() const { return mData.size(); }
 
 
-		const fpMatrix<T, D>& operator=(const fpMatrix<T, D>& rhs)
+		const fpMatrix<ValueType, D>& operator=(const fpMatrix<ValueType, D>& rhs)
 		{
 			mData = rhs.mData;
 			return rhs;
 		}
 
 
-		fpMatrix<T, D> operator+(const fpMatrix<T, D>& rhs) const
+		fpMatrix<ValueType, D> operator+(const fpMatrix<ValueType, D>& rhs) const
 		{
 			return { mData + rhs.mData };
 		}
-		fpMatrix<T, D> operator-(const fpMatrix<T, D>& rhs) const
+		fpMatrix<ValueType, D> operator-(const fpMatrix<ValueType, D>& rhs) const
 		{
 			return { mData - rhs.mData };
 		}
-		fpMatrix<T, D> operator*(const fpMatrix<T, D>& rhs) const
+		fpMatrix<ValueType, D> operator*(const fpMatrix<ValueType, D>& rhs) const
 		{
-			fpMatrix<T, D> ret;
-			eMatrix<i64>& view = ret.i64Cast();
-			const eMatrix<i64>& l = i64Cast();
-			const eMatrix<i64>& r = rhs.i64Cast();
+			fpMatrix<ValueType, D> ret;
+			eMatrix<ValueType>& view = ret.i64Cast();
+			const eMatrix<ValueType>& l = ValueTypeCast();
+			const eMatrix<ValueType>& r = rhs.ValueTypeCast();
 			view = l * r;
 			for (u64 i = 0; i < view.size(); ++i)
 				view(i) >>= mDecimal;
 			return ret;
 		}
 
-		fpMatrix<T, D>& operator+=(const fpMatrix<T, D> & rhs)
+		fpMatrix<ValueType, D>& operator+=(const fpMatrix<ValueType, D> & rhs)
 		{
 			mData += rhs.mData;
 			return *this;
 		}
-		fpMatrix<T, D>& operator-=(const fpMatrix<T, D> & rhs)
+		fpMatrix<ValueType, D>& operator-=(const fpMatrix<ValueType, D> & rhs)
 		{
 			mData -= rhs.mData;
 			return *this;
 		}
 
-		fpMatrix<T, D>& operator*=(const fpMatrix<T, D> & rhs)
+		fpMatrix<ValueType, D>& operator*=(const fpMatrix<ValueType, D> & rhs)
 		{
-			auto& view = i64Cast();
-			view *= rhs.i64Cast();
+			auto& view = ValueTypeCast();
+			view *= rhs.ValueTypeCast();
 			for (u64 i = 0; i < size(); ++i)
 				view(i) >>= mDecimal;
 			return *this;
@@ -237,15 +212,15 @@ namespace aby3
 		const value_type& operator()(u64 xy)const { return mData(xy); }
 
 
-		eMatrix<i64>& i64Cast()
+		eMatrix<ValueType>& ValueTypeCast()
 		{
-			static_assert(sizeof(value_type) == sizeof(i64), "required for this operation");
-			return reinterpret_cast<eMatrix<i64>&>(mData);
+			static_assert(sizeof(value_type) == sizeof(ValueType), "required for this operation");
+			return reinterpret_cast<eMatrix<ValueType>&>(mData);
 		}
-		const eMatrix<i64>& i64Cast() const
+		const eMatrix<ValueType>& ValueTypeCast() const
 		{
-			static_assert(sizeof(value_type) == sizeof(i64), "required for this operation");
-			return reinterpret_cast<const eMatrix<i64>&>(mData);
+			static_assert(sizeof(value_type) == sizeof(ValueType), "required for this operation");
+			return reinterpret_cast<const eMatrix<ValueType>&>(mData);
 		}
 	private:
 		fpMatrix(const eMatrix<value_type> & v)
@@ -278,39 +253,39 @@ namespace aby3
 
 
 
-	template<Decimal D>
-	struct sf64
+	template<typename  ValueType, Decimal D>
+	struct sf
 	{
 		// `s` refers to encrypted values like secret-shared 
 		static const Decimal mDecimal = D;
 
-		using value_type = si64::value_type;
-		si64 mShare;
+		using value_type = ValueType;
+		si<i64> mShare;
 
-		sf64() = default;
-		sf64(const sf64<D>&) = default;
-		sf64(sf64<D>&&) = default;
-		sf64(const std::array<value_type, 2>& d) :mShare(d) {}
-		sf64(const Ref<sf64<D>>& s) {
+		sf() = default;
+		sf(const sf<ValueType, D>&) = default;
+		sf(sf<ValueType, D>&&) = default;
+		sf(const std::array<value_type, 2>& d) :mShare(d) {}
+		sf(const Ref<sf<ValueType, D>>& s) {
 			mShare.mData[0] = *s.mData[0];
 			mShare.mData[1] = *s.mData[1];
 		}
 
-		sf64<D>& operator=(const sf64<D>& copy)
+		sf<ValueType, D>& operator=(const sf<ValueType, D>& copy)
 		{
 			mShare = copy.mShare;
 			return *this;
 		}
 
-		sf64<D> operator+(const sf64<D>& rhs) const
+		sf<ValueType, D> operator+(const sf<ValueType, D>& rhs) const
 		{
-			sf64<D> r;
+			sf<ValueType, D> r;
 			r.mShare = mShare + rhs.mShare;
 			return r;
 		}
-		sf64<D> operator-(const sf64<D>& rhs) const
+		sf<ValueType, D> operator-(const sf<ValueType, D>& rhs) const
 		{
-			sf64<D> r;
+			sf<ValueType, D> r;
 			r.mShare = mShare - rhs.mShare;
 			return r;
 		}
@@ -319,24 +294,31 @@ namespace aby3
 		const value_type& operator[](u64 i) const { return mShare[i]; }
 
 
-		si64& i64Cast() { return mShare; };
-		const si64& i64Cast() const { return mShare; };
+		si<ValueType>& ValueTypeCast() { return mShare; };
+		const si<ValueType>& ValueTypeCast() const { return mShare; };
 	};
 
+    template<Decimal D>
+    using sf64 = sf<i64, D>; // this `using` must be in the header file.
 
-	template<Decimal D>
-	struct sf64Matrix : private si64Matrix
+
+
+
+
+	template<typename ValueType, Decimal D>
+	struct sfMatrix : public siMatrix<ValueType>
 	{
 		static const Decimal mDecimal = D;
+        using  siMatrix<ValueType>::mShares;
 		
-		struct ConstRow { const sf64Matrix<D>& mMtx; const u64 mIdx; };
-		struct Row { sf64Matrix<D>& mMtx; const u64 mIdx;  const Row& operator=(const Row& row); const ConstRow& operator=(const ConstRow& row); };
+		struct ConstRow { const sfMatrix<ValueType, D>& mMtx; const u64 mIdx; };
+		struct Row { sfMatrix<ValueType, D>& mMtx; const u64 mIdx;  const Row& operator=(const Row& row); const ConstRow& operator=(const ConstRow& row); };
 
-		struct ConstCol { const sf64Matrix<D>& mMtx; const u64 mIdx; };
-		struct Col { sf64Matrix<D>& mMtx; const u64 mIdx; const Col& operator=(const Col& col); const ConstCol& operator=(const ConstCol& row); };
+		struct ConstCol { const sfMatrix<ValueType, D>& mMtx; const u64 mIdx; };
+		struct Col { sfMatrix<ValueType, D>& mMtx; const u64 mIdx; const Col& operator=(const Col& col); const ConstCol& operator=(const ConstCol& row); };
 
-		sf64Matrix() = default;
-		sf64Matrix(u64 xSize, u64 ySize)
+		sfMatrix() = default;
+		sfMatrix(u64 xSize, u64 ySize)
 		{
 			resize(xSize, ySize);
 		}
@@ -352,30 +334,30 @@ namespace aby3
 		u64 cols() const { return mShares[0].cols(); }
 		u64 size() const { return mShares[0].size(); }
 
-		Ref<sf64<D>> operator()(u64 x, u64 y)
+		Ref<sf<ValueType, D>> operator()(u64 x, u64 y)
 		{
-			typename sf64<D>::value_type& s0 = mShares[0](x, y);
-			typename sf64<D>::value_type& s1 = mShares[1](x, y);
+			typename sf<ValueType, D>::value_type& s0 = mShares[0](x, y);
+			typename sf<ValueType, D>::value_type& s1 = mShares[1](x, y);
 
-			return Ref<sf64<D>>(s0, s1);
+			return Ref<sf<ValueType, D>>(s0, s1);
 		}
 
-		Ref<sf64<D>> operator()(u64 xy)
+		Ref<sf<ValueType, D>> operator()(u64 xy)
 		{
-			auto& s0 = static_cast<typename sf64<D>::value_type&>(mShares[0](xy));
-			auto& s1 = static_cast<typename sf64<D>::value_type&>(mShares[1](xy));
+			auto& s0 = static_cast<typename sf<ValueType, D>::value_type&>(mShares[0](xy));
+			auto& s1 = static_cast<typename sf<ValueType, D>::value_type&>(mShares[1](xy));
 
-			return Ref<sf64<D>>(s0, s1);
+			return Ref<sf<ValueType, D>>(s0, s1);
 		}
 
-		const sf64Matrix<D>& operator=(const sf64Matrix<D>& B)
+		const sfMatrix<ValueType, D>& operator=(const sfMatrix<ValueType, D>& B)
 		{
 			mShares = B.mShares;
 			return B;
 		}
 
 
-		sf64Matrix<D>& operator+=(const sf64Matrix<D>& B)
+		sfMatrix<ValueType, D>& operator+=(const sfMatrix<ValueType, D>& B)
 		{
 			mShares[0] += B.mShares[0];
 			mShares[1] += B.mShares[1];
@@ -383,29 +365,29 @@ namespace aby3
 		}
 
 
-		sf64Matrix<D>& operator-=(const sf64Matrix<D>& B)
+		sfMatrix<ValueType, D>& operator-=(const sfMatrix<ValueType, D>& B)
 		{
 			mShares[0] -= B.mShares[0];
 			mShares[1] -= B.mShares[1];
 			return *this;
 		}
 
-		sf64Matrix<D> operator+(const sf64Matrix<D>& B) const
+		sfMatrix<ValueType, D> operator+(const sfMatrix<ValueType, D>& B) const
 		{
-			sf64Matrix<D> r = *this;
+			sfMatrix<ValueType, D> r = *this;
 			r += B;
 			return r;
 		}
-		sf64Matrix<D> operator-(const sf64Matrix<D>& B) const
+		sfMatrix<ValueType, D> operator-(const sfMatrix<ValueType, D>& B) const
 		{
-			sf64Matrix<D> r = *this;
+			sfMatrix<ValueType, D> r = *this;
 			r -= B;
 			return r;
 		}
 
-		sf64Matrix<D> transpose() const
+		sfMatrix<ValueType, D> transpose() const
 		{
-			sf64Matrix<D> r = *this;
+			sfMatrix<ValueType, D> r = *this;
 			r.transposeInPlace();
 			return r;
 		}
@@ -421,12 +403,12 @@ namespace aby3
 		ConstRow row(u64 i) const { return ConstRow{ *this, i }; }
 		ConstCol col(u64 i) const { return ConstCol{ *this, i }; }
 
-		bool operator !=(const sf64Matrix<D>& b) const
+		bool operator !=(const sfMatrix<ValueType, D>& b) const
 		{
 			return !(*this == b);
 		}
 
-		bool operator ==(const sf64Matrix<D> & b) const
+		bool operator ==(const sfMatrix<ValueType, D> & b) const
 		{
 			return (rows() == b.rows() &&
 				cols() == b.cols() &&
@@ -434,17 +416,20 @@ namespace aby3
 		}
 
 
-		si64Matrix& i64Cast() { return static_cast<si64Matrix&>(*this); }
-		const si64Matrix& i64Cast() const { return static_cast<const si64Matrix&>(* this); }
+		siMatrix<ValueType>& ValueTypeCast() { return static_cast<siMatrix<ValueType>&>(*this); }
+		const siMatrix<ValueType>& ValueTypeCast() const { return static_cast<const siMatrix<ValueType>&>(* this); }
 
 
-		eMatrix<i64>& operator[](u64 i) { return mShares[i]; }
-		const eMatrix<i64>& operator[](u64 i) const { return mShares[i]; }
+		eMatrix<ValueType>& operator[](u64 i) { return mShares[i]; }
+		const eMatrix<ValueType>& operator[](u64 i) const { return mShares[i]; }
 	};
 
+    template<Decimal  D>
+    using sf64Matrix = sfMatrix<i64, D>;
 
-	template<Decimal D>
-	inline const typename sf64Matrix<D>::Row& sf64Matrix<D>::Row::operator=(const Row & row)
+
+	template<typename ValueType, Decimal D>
+	inline const typename sfMatrix<ValueType, D>::Row& sfMatrix<ValueType, D>::Row::operator=(const Row & row)
 	{
 		mMtx.mShares[0].row(mIdx) = row.mMtx.mShares[0].row(row.mIdx);
 		mMtx.mShares[1].row(mIdx) = row.mMtx.mShares[1].row(row.mIdx);
@@ -452,8 +437,8 @@ namespace aby3
 		return row;
 	}
 
-	template<Decimal D>
-	inline const typename sf64Matrix<D>::ConstRow& sf64Matrix<D>::Row::operator=(const ConstRow & row)
+	template<typename ValueType, Decimal D>
+	inline const typename sfMatrix<ValueType, D>::ConstRow& sfMatrix<ValueType, D>::Row::operator=(const ConstRow & row)
 	{
 		mMtx.mShares[0].row(mIdx) = row.mMtx.mShares[0].row(row.mIdx);
 		mMtx.mShares[1].row(mIdx) = row.mMtx.mShares[1].row(row.mIdx);
@@ -461,8 +446,8 @@ namespace aby3
 	}
 
 
-	template<Decimal D>
-	inline const typename sf64Matrix<D>::Col& sf64Matrix<D>::Col::operator=(const Col & row)
+	template<typename ValueType, Decimal D>
+	inline const typename sfMatrix<ValueType, D>::Col& sfMatrix<ValueType, D>::Col::operator=(const Col & row)
 	{
 		mMtx.mShares[0].col(mIdx) = row.mMtx.mShares[0].col(row.mIdx);
 		mMtx.mShares[1].col(mIdx) = row.mMtx.mShares[1].col(row.mIdx);
@@ -470,214 +455,11 @@ namespace aby3
 		return row;
 	}
 
-	template<Decimal D>
-	inline const typename sf64Matrix<D>::ConstCol& sf64Matrix<D>::Col::operator=(const ConstCol & row)
+	template<typename ValueType, Decimal D>
+	inline const typename sfMatrix<ValueType, D>::ConstCol& sfMatrix<ValueType, D>::Col::operator=(const ConstCol & row)
 	{
 		mMtx.mShares[0].col(mIdx) = row.mMtx.mShares[0].col(row.mIdx);
 		mMtx.mShares[1].col(mIdx) = row.mMtx.mShares[1].col(row.mIdx);
 		return row;
 	}
-
-    //// newly added ////////
-    template<Decimal D>
-    struct sf32
-    {
-        // `s` refers to si32 being encrypted values as in secretly shared.
-        static const Decimal mDecimal = D;
-
-        using value_type = si32::value_type;
-        si32 mShare;
-
-        sf32() = default;
-        sf32(const sf32<D>&) = default;
-        sf32(sf32<D>&&) = default;
-        sf32(const std::array<value_type, 2>& d) :mShare(d) {}
-        sf32(const Ref<sf32<D>>& s) {
-            mShare.mData[0] = *s.mData[0];
-            mShare.mData[1] = *s.mData[1];
-        }
-
-        sf32<D>& operator=(const sf32<D>& copy)
-        {
-            mShare = copy.mShare; // si32 == operator is ambiguous.
-            return *this;
-        }
-
-        sf32<D> operator+(const sf32<D>& rhs) const
-        {
-            sf32<D> r;
-            r.mShare = mShare + rhs.mShare;
-            return r;
-        }
-        sf32<D> operator-(const sf32<D>& rhs) const
-        {
-            sf32<D> r;
-            r.mShare = mShare - rhs.mShare;
-            return r;
-        }
-
-        value_type& operator[](u64 i) { return mShare[i]; }
-        const value_type& operator[](u64 i) const { return mShare[i]; }
-
-
-        si32& i32Cast() { return mShare; };
-        const si32& i32Cast() const { return mShare; };
-    };
-
-
-    template<Decimal D>
-    struct sf32Matrix : private si32Matrix
-    {
-        static const Decimal mDecimal = D;
-
-        struct ConstRow { const sf32Matrix<D>& mMtx; const u64 mIdx; };
-        struct Row { sf32Matrix<D>& mMtx; const u64 mIdx;  const Row& operator=(const Row& row); const ConstRow& operator=(const ConstRow& row); };
-
-        struct ConstCol { const sf32Matrix<D>& mMtx; const u64 mIdx; };
-        struct Col { sf32Matrix<D>& mMtx; const u64 mIdx; const Col& operator=(const Col& col); const ConstCol& operator=(const ConstCol& row); };
-
-        sf32Matrix() = default;
-        sf32Matrix(u64 xSize, u64 ySize)
-        {
-            resize(xSize, ySize);
-        }
-
-        void resize(u64 xSize, u64 ySize)
-        {
-            mShares[0].resize(xSize, ySize);
-            mShares[1].resize(xSize, ySize);
-        }
-
-
-        u64 rows() const { return mShares[0].rows(); }
-        u64 cols() const { return mShares[0].cols(); }
-        u64 size() const { return mShares[0].size(); }
-
-        Ref<sf32<D>> operator()(u64 x, u64 y)
-        {
-            typename sf32<D>::value_type& s0 = mShares[0](x, y);
-            typename sf32<D>::value_type& s1 = mShares[1](x, y);
-
-            return Ref<sf32<D>>(s0, s1);
-        }
-
-        Ref<sf32<D>> operator()(u64 xy)
-        {
-            auto& s0 = static_cast<typename sf32<D>::value_type&>(mShares[0](xy));
-            auto& s1 = static_cast<typename sf32<D>::value_type&>(mShares[1](xy));
-
-            return Ref<sf32<D>>(s0, s1);
-        }
-
-        const sf32Matrix<D>& operator=(const sf32Matrix<D>& B)
-        {
-            mShares = B.mShares;
-            return B;
-        }
-
-
-        sf32Matrix<D>& operator+=(const sf32Matrix<D>& B)
-        {
-            mShares[0] += B.mShares[0];
-            mShares[1] += B.mShares[1];
-            return *this;
-        }
-
-
-        sf32Matrix<D>& operator-=(const sf32Matrix<D>& B)
-        {
-            mShares[0] -= B.mShares[0];
-            mShares[1] -= B.mShares[1];
-            return *this;
-        }
-
-        sf32Matrix<D> operator+(const sf32Matrix<D>& B) const
-        {
-            sf32Matrix<D> r = *this;
-            r += B;
-            return r;
-        }
-        sf32Matrix<D> operator-(const sf32Matrix<D>& B) const
-        {
-            sf32Matrix<D> r = *this;
-            r -= B;
-            return r;
-        }
-
-        sf32Matrix<D> transpose() const
-        {
-            sf32Matrix<D> r = *this;
-            r.transposeInPlace();
-            return r;
-        }
-        void transposeInPlace()
-        {
-            mShares[0].transposeInPlace();
-            mShares[1].transposeInPlace();
-        }
-
-
-        Row row(u64 i) { return Row{ *this, i }; }
-        Col col(u64 i) { return Col{ *this, i }; }
-        ConstRow row(u64 i) const { return ConstRow{ *this, i }; }
-        ConstCol col(u64 i) const { return ConstCol{ *this, i }; }
-
-        bool operator !=(const sf32Matrix<D>& b) const
-        {
-            return !(*this == b);
-        }
-
-        bool operator ==(const sf32Matrix<D> & b) const
-        {
-            return (rows() == b.rows() &&
-                    cols() == b.cols() &&
-                    mShares == b.mShares);
-        }
-
-
-        sf32Matrix& i32Cast() { return static_cast<sf32Matrix&>(*this); }
-        const sf32Matrix& i32Cast() const { return static_cast<const sf32Matrix&>(* this); }
-
-
-        eMatrix<i32>& operator[](u64 i) { return mShares[i]; }
-        const eMatrix<i32>& operator[](u64 i) const { return mShares[i]; }
-    };
-
-
-    template<Decimal D>
-    inline const typename sf32Matrix<D>::Row& sf32Matrix<D>::Row::operator=(const Row & row)
-    {
-        mMtx.mShares[0].row(mIdx) = row.mMtx.mShares[0].row(row.mIdx);
-        mMtx.mShares[1].row(mIdx) = row.mMtx.mShares[1].row(row.mIdx);
-
-        return row;
-    }
-
-    template<Decimal D>
-    inline const typename sf32Matrix<D>::ConstRow& sf32Matrix<D>::Row::operator=(const ConstRow & row)
-    {
-        mMtx.mShares[0].row(mIdx) = row.mMtx.mShares[0].row(row.mIdx);
-        mMtx.mShares[1].row(mIdx) = row.mMtx.mShares[1].row(row.mIdx);
-        return row;
-    }
-
-
-    template<Decimal D>
-    inline const typename sf32Matrix<D>::Col& sf32Matrix<D>::Col::operator=(const Col & row)
-    {
-        mMtx.mShares[0].col(mIdx) = row.mMtx.mShares[0].col(row.mIdx);
-        mMtx.mShares[1].col(mIdx) = row.mMtx.mShares[1].col(row.mIdx);
-
-        return row;
-    }
-
-    template<Decimal D>
-    inline const typename sf32Matrix<D>::ConstCol& sf32Matrix<D>::Col::operator=(const ConstCol & row)
-    {
-        mMtx.mShares[0].col(mIdx) = row.mMtx.mShares[0].col(row.mIdx);
-        mMtx.mShares[1].col(mIdx) = row.mMtx.mShares[1].col(row.mIdx);
-        return row;
-    }
-
-
 }

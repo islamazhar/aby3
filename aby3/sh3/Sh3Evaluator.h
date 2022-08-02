@@ -98,17 +98,18 @@ namespace aby3
 			return asyncMul(dependency, A.i64Cast(), B.i64Cast(), C.i64Cast(), D);
 		}
 
-
+        template<typename ValueType>
 		Sh3Task asyncMul(
 			Sh3Task dep,
 			const si64Matrix& A,
-			const sbMatrix& B,
+			const sbMatrix<ValueType>& B,
 			si64Matrix& C);
 
+        template<typename ValueType>
 		Sh3Task asyncMul(
 			Sh3Task dep,
 			const i64& a,
-			const sbMatrix& B,
+			const sbMatrix <ValueType>& B,
 			si64Matrix& C);
 
         TruncationPair getTruncationTuple(u64 xSize, u64 ySize, u64 d);

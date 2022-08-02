@@ -8,8 +8,8 @@ namespace aby3
 {
 
 
-     
-    void Sh3Converter::toPackedBin(const sbMatrix & in, sPackedBin & dest)
+    template<typename  ValueType>
+    void Sh3Converter<ValueType>::toPackedBin(const sbMatrix<ValueType> & in, sPackedBin & dest)
     {
         dest.reset(in.rows(), in.bitCount());
 
@@ -31,8 +31,8 @@ namespace aby3
             transpose(inView, memView);
         }
     }
-
-    void Sh3Converter::toBinaryMatrix(const sPackedBin & in, sbMatrix & dest)
+    template<typename  ValueType>
+    void Sh3Converter<ValueType>::toBinaryMatrix(const sPackedBin & in, sbMatrix<ValueType> & dest)
     {
         dest.resize(in.shareCount(), in.bitCount());
 
@@ -54,12 +54,12 @@ namespace aby3
             transpose(inView, memView);
         }
     }
-
-    Sh3Task Sh3Converter::toPackedBin(Sh3Task dep, Sh3ShareGen& gen, const si64Matrix& in, sPackedBin& dest)
+    template<typename  ValueType>
+    Sh3Task Sh3Converter<ValueType>::toPackedBin(Sh3Task dep, Sh3ShareGen& gen, const si64Matrix& in, sPackedBin& dest)
     {
         return dep.then([&](CommPkg & comm, Sh3Task self) {
             struct State {
-                Sh3BinaryEvaluator mEval;
+                Sh3BinaryEvaluator<ValueType> mEval;
                 //oc::BetaCircuit mCircuit;
             };
 

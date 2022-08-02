@@ -11,7 +11,7 @@
 
 namespace aby3
 {
-
+    template<typename  ValueType>
     class Sh3BinaryEvaluator
     {
     public:
@@ -74,8 +74,8 @@ namespace aby3
             Sh3Task dependency,
             oc::BetaCircuit* cir,
             Sh3ShareGen& gen,
-            std::vector<const sbMatrix*> inputs,
-            std::vector<sbMatrix*> outputs);
+            std::vector<const sbMatrix<ValueType>*> inputs,
+            std::vector<sbMatrix<ValueType>*> outputs);
 
 
         void setCir(oc::BetaCircuit* cir, u64 width, Sh3ShareGen& gen)
@@ -87,8 +87,8 @@ namespace aby3
         }
         void setCir(oc::BetaCircuit* cir, u64 width, block prevSeed, block nextSeed);
 
-        void setReplicatedInput(u64 i, const sbMatrix& in);
-        void setInput(u64 i, const sbMatrix& in);
+        void setReplicatedInput(u64 i, const sbMatrix<ValueType>& in);
+        void setInput(u64 i, const sbMatrix<ValueType>& in);
         void setInput(u64 i, const sPackedBin& in);
 
         Sh3Task asyncEvaluate(Sh3Task dependency);
@@ -99,8 +99,8 @@ namespace aby3
         void getOutput(u64 i, sPackedBin& out);
         void getOutput(const std::vector<oc::BetaWire>& wires, sPackedBin& out);
 
-        void getOutput(u64 i, sbMatrix& out);
-        void getOutput(const std::vector<oc::BetaWire>& wires, sbMatrix& out);
+        void getOutput(u64 i, sbMatrix<ValueType>& out);
+        void getOutput(const std::vector<oc::BetaWire>& wires, sbMatrix<ValueType>& out);
 
         bool hasMoreRounds() const {
             return mLevel <= mCir->mLevelCounts.size();

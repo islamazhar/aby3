@@ -53,12 +53,16 @@ namespace aby3
 		Sh3Task remoteFixedMatrix(Sh3Task dep, sf64Matrix<D>& dest);
 
         // generates a binary sharing of the matrix m and places the result in dest
-        void localBinMatrix(CommPkg& comm, const i64Matrix& m, sbMatrix& dest);
-        Sh3Task localBinMatrix(Sh3Task dep, const i64Matrix& m, sbMatrix& dest);
+        template<typename ValueType>
+        void localBinMatrix(CommPkg& comm, const i64Matrix& m, sbMatrix<ValueType>& dest);
+        template<typename ValueType>
+        Sh3Task localBinMatrix(Sh3Task dep, const i64Matrix& m, sbMatrix<ValueType>& dest);
 
         // generates a binary sharing of the matrix ibput by the remote party and places the result in dest
-        void remoteBinMatrix(CommPkg& comm, sbMatrix& dest);
-        Sh3Task remoteBinMatrix(Sh3Task dep, sbMatrix& dest);
+        template<typename ValueType>
+        void remoteBinMatrix(CommPkg& comm, sbMatrix<ValueType>& dest);
+        template<typename ValueType>
+        Sh3Task remoteBinMatrix(Sh3Task dep, sbMatrix<ValueType>& dest);
 
         // generates a sPackedBin from the given matrix.
         void localPackedBinary(CommPkg& comm, const i64Matrix& m, sPackedBin& dest);
@@ -103,9 +107,12 @@ namespace aby3
         void revealAll(CommPkg& comm, const si64Matrix& x, i64Matrix& dest);
         void reveal(CommPkg& comm, u64 partyIdx, const si64Matrix& x);
 
-        void reveal(CommPkg& comm, const sbMatrix& x, i64Matrix& dest);
-        void revealAll(CommPkg& comm, const sbMatrix& x, i64Matrix& dest);
-        void reveal(CommPkg& comm, u64 partyIdx, const sbMatrix& x);
+        template<typename ValueType>
+        void reveal(CommPkg& comm, const sbMatrix<ValueType>& x, i64Matrix& dest);
+        template<typename ValueType>
+        void revealAll(CommPkg& comm, const sbMatrix<ValueType>& x, i64Matrix& dest);
+        template<typename ValueType>
+        void reveal(CommPkg& comm, u64 partyIdx, const sbMatrix<ValueType>& x);
 
         void reveal(CommPkg& comm, const sPackedBin& x, i64Matrix& dest);
         void revealAll(CommPkg& comm, const sPackedBin& x, i64Matrix& dest);
@@ -120,9 +127,12 @@ namespace aby3
         Sh3Task revealAll(Sh3Task dep, const si64Matrix& x, i64Matrix& dest);
         Sh3Task reveal(Sh3Task dep, u64 partyIdx, const si64Matrix& x);
 
-        Sh3Task reveal(Sh3Task dep, const sbMatrix& x, i64Matrix& dest);
-        Sh3Task revealAll(Sh3Task dep, const sbMatrix& x, i64Matrix& dest);
-        Sh3Task reveal(Sh3Task dep, u64 partyIdx, const sbMatrix& x);
+        template<typename ValueType>
+        Sh3Task reveal(Sh3Task dep, const sbMatrix<ValueType>& x, i64Matrix& dest);
+        template<typename ValueType>
+        Sh3Task revealAll(Sh3Task dep, const sbMatrix<ValueType>& x, i64Matrix& dest);
+        template<typename ValueType>
+        Sh3Task reveal(Sh3Task dep, u64 partyIdx, const sbMatrix<ValueType>& x);
 
         Sh3Task reveal(Sh3Task dep, const sPackedBin& x, i64Matrix& dest);
         Sh3Task revealAll(Sh3Task dep, const sPackedBin& x, i64Matrix& dest);
@@ -132,7 +142,8 @@ namespace aby3
         Sh3Task revealAll(Sh3Task dep, const sPackedBin& x, PackedBin& dest);
 
         void rand(si64Matrix& dest);
-        void rand(sbMatrix& dest);
+        template<typename ValueType>
+        void rand(sbMatrix<ValueType>& dest);
         void rand(sPackedBin& dest);
 
 

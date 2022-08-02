@@ -133,11 +133,11 @@ namespace aby3
     //}
 
 
-
+    template<typename  ValueType>
     Sh3Task Sh3Evaluator::asyncMul(
         Sh3Task dep,
         const si64Matrix& a,
-        const sbMatrix& b,
+        const sbMatrix<ValueType> & b,
         si64Matrix& c)
     {
         return dep.then([&](CommPkg& comm, Sh3Task self) {
@@ -288,11 +288,11 @@ namespace aby3
         ).getClosure();
     }
 
-
+    template<typename  ValueType>
     Sh3Task Sh3Evaluator::asyncMul(
         Sh3Task dep,
         const i64& a,
-        const sbMatrix& b,
+        const sbMatrix<ValueType> & b,
         si64Matrix& c)
     {
         return dep.then([&](CommPkg& comm, Sh3Task self) {
