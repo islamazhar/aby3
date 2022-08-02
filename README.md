@@ -1,12 +1,13 @@
 # Disclaimer
-This is  clone of [ABY 3](https://github.com/ladnir/aby3) with two additional 
+This is  clone of [ABY 3](https://github.com/ladnir/aby3) with three additional 
 enhancements added.
 - `swish` activation function
 - support for 32 bit representation for fixed point.
 - updating the neural network pred code.
 
+Some of the changes are breaking. Hence the need for a seperate repository.
 
-The rest of the README is copied from the original repository.
+**The rest of the README is copied from the original repository.**
 
 # ABY 3 and Applications
 This library provides the semi-honest implementation of [ABY 3](https://eprint.iacr.org/2018/403.pdf) and [Fast Database Joins for Secret Shared Data](https://eprint.iacr.org/2019/518.pdf).
