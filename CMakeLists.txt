@@ -76,10 +76,10 @@ endif()
 #        Build aby3, com-psi, tests         #
 #############################################
 add_subdirectory(aby3)
-add_subdirectory(aby3-DB)
+#add_subdirectory(aby3-DB)
 
 add_subdirectory(aby3-ML)
-add_subdirectory(aby3-DB_tests)
+#add_subdirectory(aby3-DB_tests)
 add_subdirectory(aby3_tests)
 
 add_subdirectory(frontend)
