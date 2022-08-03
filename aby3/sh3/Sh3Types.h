@@ -570,4 +570,9 @@ namespace aby3
     using sb64 = sb<i64>;
     using si64Matrix = siMatrix<i64>;
     using sbi64Matrix = sbMatrix<i64>;
+
+    using si32 = si<i32>;
+    using sb32 = sb<i32>;
+    using si32Matrix = siMatrix<i32>;
+    using sbi32Matrix = sbMatrix<i32>;
 }

@@ -92,6 +92,8 @@ namespace aby3
 
 	template<Decimal D>
 	using f64 = fp<i64, D>; // remove this??
+    template<Decimal D>
+    using f32 = fp<i32, D>; // remove this??
 
 	template<typename ValueType, Decimal D>
 	std::ostream& operator<<(std::ostream & o, const fp<ValueType, D> & f)
@@ -231,6 +233,8 @@ namespace aby3
 
 	template<Decimal D>
 	using f64Matrix = fpMatrix<i64, D>;
+    template<Decimal D>
+    using f32Matrix = fpMatrix<i32, D>;
 
 	template<typename T, Decimal D>
 	std::ostream& operator<<(std::ostream & o, const fpMatrix<T, D> & f)
@@ -260,7 +264,7 @@ namespace aby3
 		static const Decimal mDecimal = D;
 
 		using value_type = ValueType;
-		si<i64> mShare;
+		si<ValueType> mShare;
 
 		sf() = default;
 		sf(const sf<ValueType, D>&) = default;
@@ -300,6 +304,9 @@ namespace aby3
 
     template<Decimal D>
     using sf64 = sf<i64, D>; // this `using` must be in the header file.
+
+    template<Decimal D>
+    using sf32 = sf<i32, D>; // this `using` must be in the header file.
 
 
 
@@ -426,6 +433,8 @@ namespace aby3
 
     template<Decimal  D>
     using sf64Matrix = sfMatrix<i64, D>;
+    template<Decimal  D>
+    using sf32Matrix = sfMatrix<i32, D>;
 
 
 	template<typename ValueType, Decimal D>
