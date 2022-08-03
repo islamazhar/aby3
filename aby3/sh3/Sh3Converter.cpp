@@ -59,7 +59,7 @@ namespace aby3
     {
         return dep.then([&](CommPkg & comm, Sh3Task self) {
             struct State {
-                Sh3BinaryEvaluator<ValueType> mEval;
+                Sh3BinaryEvaluator mEval;
                 //oc::BetaCircuit mCircuit;
             };
 

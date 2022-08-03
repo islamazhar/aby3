@@ -53,8 +53,7 @@ namespace aby3
 
 
     using namespace oc;
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::setCir(BetaCircuit* cir, u64 width, block prevSeed, block nextSeed)
+    void Sh3BinaryEvaluator::setCir(BetaCircuit* cir, u64 width, block prevSeed, block nextSeed)
     {
 
         mLog << "new circuit ---------------------------------" << std::endl;
@@ -85,8 +84,8 @@ namespace aby3
         }
 #endif
     }
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::setReplicatedInput(u64 idx, const sbMatrix<ValueType>& in)
+
+    void Sh3BinaryEvaluator::setReplicatedInput(u64 idx, const sbi64Matrix& in)
     {
         mLevel = 0;
         auto& inWires = mCir->mInputs[idx].mWires;
@@ -175,8 +174,8 @@ namespace aby3
         return hex(vv, len);
     }
 
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::setInput(u64 idx, const sbMatrix<ValueType>& in)
+
+    void Sh3BinaryEvaluator::setInput(u64 idx, const sbi64Matrix& in)
     {
         mLevel = 0;
         auto& inWires = mCir->mInputs[idx].mWires;
@@ -333,8 +332,8 @@ namespace aby3
 #endif
 
     }
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::setInput(u64 idx, const sPackedBin& in)
+
+    void Sh3BinaryEvaluator::setInput(u64 idx, const sPackedBin& in)
     {
         //auto simdWidth = mMem.simdWidth();
 
@@ -417,8 +416,8 @@ namespace aby3
     }
 
 #ifdef BINARY_ENGINE_DEBUG
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::validateMemory()
+
+    void Sh3BinaryEvaluator::validateMemory()
     {
         for (u64 i = 0; i < mCir->mWireCount; ++i)
         {
@@ -426,8 +425,8 @@ namespace aby3
         }
     }
 
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::validateWire(u64 wireIdx)
+
+    void Sh3BinaryEvaluator::validateWire(u64 wireIdx)
     {
         if (mDebug && mPlainWires_DEBUG[0][wireIdx].mIsSet)
         {
@@ -460,8 +459,8 @@ namespace aby3
             }
         }
     }
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::distributeInputs()
+
+    void Sh3BinaryEvaluator::distributeInputs()
     {
 
         if (mDebug)
@@ -498,8 +497,8 @@ namespace aby3
             //ostreamLock(std::cout) << "b" << mDebugPartyIdx << " " << b << std::endl;
         }
     }
-    template<typename  ValueType>
-    oc::block Sh3BinaryEvaluator<ValueType>::hashDebugState()
+
+    oc::block Sh3BinaryEvaluator::hashDebugState()
     {
         if (mDebug == false)
             return ZeroBlock;
@@ -517,13 +516,13 @@ namespace aby3
     }
 #endif
 
-    template<typename  ValueType>
-    Sh3Task Sh3BinaryEvaluator<ValueType>::asyncEvaluate(
+
+    Sh3Task Sh3BinaryEvaluator::asyncEvaluate(
         Sh3Task dep,
         oc::BetaCircuit* cir,
         Sh3ShareGen& gen,
-        std::vector<const sbMatrix<ValueType>*> inputs,
-        std::vector<sbMatrix<ValueType>*> outputs)
+        std::vector<const sbi64Matrix*> inputs,
+        std::vector<sbi64Matrix*> outputs)
     {
         if (cir->mInputs.size() != inputs.size())
             throw std::runtime_error(LOCATION);
@@ -558,8 +557,8 @@ namespace aby3
             }
         });
     }
-    template<typename ValueType>
-    Sh3Task Sh3BinaryEvaluator<ValueType>::asyncEvaluate(Sh3Task dependency)
+
+    Sh3Task Sh3BinaryEvaluator::asyncEvaluate(Sh3Task dependency)
     {
 #ifdef BINARY_ENGINE_DEBUG
         validateMemory();
@@ -583,8 +582,8 @@ namespace aby3
         return (data[k] >> j) & 1;
     }
 
-    template<typename ValueType>
-    u8 Sh3BinaryEvaluator<ValueType>::extractBitShare(u64 rowIdx, u64 wireIdx, u64 shareIdx)
+
+    u8 Sh3BinaryEvaluator::extractBitShare(u64 rowIdx, u64 wireIdx, u64 shareIdx)
     {
         if (rowIdx >= mMem.shareCount())
             throw std::runtime_error(LOCATION);
@@ -596,8 +595,8 @@ namespace aby3
         return (row[k] >> j) & 1;
     }
 
-    template<typename ValueType>
-    std::ostream& operator<<(std::ostream& out, typename Sh3BinaryEvaluator<ValueType>::DEBUG_Triple& triple)
+
+    std::ostream& operator<<(std::ostream& out, typename Sh3BinaryEvaluator::DEBUG_Triple& triple)
     {
         out << "(" << (int)triple.mBits[0] << " " << (int)triple.mBits[1] << " " << (int)triple.mBits[2] << ") = " << triple.val();
 
@@ -622,8 +621,8 @@ namespace aby3
 
         return ss.str();
     }
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::roundCallback(CommPkg& comm, Sh3Task task)
+
+    void Sh3BinaryEvaluator::roundCallback(CommPkg& comm, Sh3Task task)
     {
 
         mLog << "roundCallback " << mLevel << std::endl;
@@ -1423,8 +1422,8 @@ namespace aby3
         }
     }
 
-    template<typename ValueType>
-    void Sh3BinaryEvaluator<ValueType>::getOutput(u64 i, sbMatrix<ValueType>& out)
+
+    void Sh3BinaryEvaluator::getOutput(u64 i, sbi64Matrix& out)
     {
         if (mCir->mOutputs.size() <= i) throw std::runtime_error(LOCATION);
 
@@ -1432,15 +1431,15 @@ namespace aby3
 
         getOutput(outWires, out);
     }
-template<typename ValueType>
-    void Sh3BinaryEvaluator<ValueType>::getOutput(u64 idx, sPackedBin& out)
+
+    void Sh3BinaryEvaluator::getOutput(u64 idx, sPackedBin& out)
     {
         const auto& outWires = mCir->mOutputs[idx].mWires;
         getOutput(outWires, out);
     }
 
-template<typename ValueType>
-    void Sh3BinaryEvaluator<ValueType>::getOutput(const std::vector<oc::BetaWire>& outWires, sPackedBin& out)
+
+    void Sh3BinaryEvaluator::getOutput(const std::vector<oc::BetaWire>& outWires, sPackedBin& out)
     {
 
         out.reset(mMem.shareCount(), outWires.size());
@@ -1505,8 +1504,8 @@ template<typename ValueType>
             }
         }
     }
-template<typename ValueType>
-    void Sh3BinaryEvaluator<ValueType>::getOutput(const std::vector<BetaWire>& outWires, sbMatrix<ValueType>& out)
+
+    void Sh3BinaryEvaluator::getOutput(const std::vector<BetaWire>& outWires, sbi64Matrix& out)
     {
 
         using Word = i64;
@@ -1627,9 +1626,9 @@ template<typename ValueType>
         }
     }
 
-    template<typename ValueType>
-    typename Sh3BinaryEvaluator<ValueType>::block_type*
-        Sh3BinaryEvaluator<ValueType>::getShares()
+
+    typename Sh3BinaryEvaluator::block_type*
+        Sh3BinaryEvaluator::getShares()
     {
 #ifdef NEW_SHARE
         std::array<block, 8> temp;
@@ -1690,8 +1689,8 @@ template<typename ValueType>
 
 
 #ifdef BINARY_ENGINE_DEBUG
-    template<typename  ValueType>
-    void Sh3BinaryEvaluator<ValueType>::DEBUG_Triple::assign(
+
+    void Sh3BinaryEvaluator::DEBUG_Triple::assign(
         const DEBUG_Triple& in0,
         const DEBUG_Triple& in1,
         GateType type)

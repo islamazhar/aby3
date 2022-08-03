@@ -11,7 +11,6 @@
 
 namespace aby3
 {
-    template<typename ValueType>
 	class Sh3Piecewise
 	{
 	public:
@@ -116,10 +115,10 @@ namespace aby3
 			return eval(dep, inputs.ValueTypeCast(), outputs.ValueTypeCast(), D, evaluator, print);
 		}
 
-		std::vector<sbMatrix<ValueType>> mInputRegions;
-		std::vector<sbMatrix<ValueType>> circuitInput0;
-		sbMatrix<ValueType> circuitInput1;
-		Sh3BinaryEvaluator<ValueType> binEng;
+		std::vector<sbi64Matrix> mInputRegions;
+		std::vector<sbi64Matrix> circuitInput0;
+		sbi64Matrix circuitInput1;
+		Sh3BinaryEvaluator binEng;
 		CircuitLibrary lib;
 		std::vector<si64Matrix>functionOutputs;
 

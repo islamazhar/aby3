@@ -170,7 +170,7 @@ void Sh3_BinaryEngine_test(
     std::array < std::vector<oc::Matrix<i64>>, 3> CC;
     std::array < std::vector<oc::Matrix<i64>>, 3> CC2;
     std::array<std::atomic<int>, 3> ac;
-    Sh3BinaryEvaluator<i64> evals[3];
+    Sh3BinaryEvaluator evals[3];
 
     //block tag = oc::sysRandomSeed();
 

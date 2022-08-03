@@ -40,8 +40,8 @@ namespace aby3
 	//{
 	//	eval({ &input, 1 }, {&out , 1});
 	//}
-    template<typename ValueType>
-	void Sh3Piecewise<ValueType>::eval(
+
+	void Sh3Piecewise::eval(
 		const eMatrix<double> & inputs,
 		eMatrix<double> & outputs,
 		u64 D,
@@ -59,8 +59,8 @@ namespace aby3
 			outputs(i) = out(i) / double(1ull << D);
 	}
 
-    template<typename ValueType>
-	oc::Matrix<u8> Sh3Piecewise<ValueType>::getInputRegions(
+
+	oc::Matrix<u8> Sh3Piecewise::getInputRegions(
 		const i64Matrix & inputs,
 		u64 decimal)
 	{
@@ -87,8 +87,8 @@ namespace aby3
 
 		return inputRegions;
 	}
-    template<typename ValueType>
-	void Sh3Piecewise<ValueType>::eval(
+
+	void Sh3Piecewise::eval(
 		const i64Matrix & inputs,
 		i64Matrix & outputs,
 		u64 decimal,
@@ -180,9 +180,8 @@ namespace aby3
 		}
 
 	}
-#define UPDATE 
-    template<typename ValueType>
-	Sh3Task Sh3Piecewise<ValueType>::eval(
+#define UPDATE
+	Sh3Task Sh3Piecewise::eval(
 		Sh3Task dep,
 		const si64Matrix & inputs,
 		si64Matrix & outputs,
@@ -378,8 +377,8 @@ namespace aby3
 			return dep;
 	}
 
-    template<typename ValueType>
-	Sh3Task Sh3Piecewise<ValueType>::getInputRegions(
+
+	Sh3Task Sh3Piecewise::getInputRegions(
 		const si64Matrix & inputs, u64 decimal,
 		CommPkg & comm, Sh3Task & self,
 		Sh3ShareGen& gen,
@@ -516,8 +515,8 @@ namespace aby3
 
 	}
 
-    template<typename ValueType>
-	Sh3Task Sh3Piecewise<ValueType>::getFunctionValues(
+
+	Sh3Task Sh3Piecewise::getFunctionValues(
 		const si64Matrix & inputs,
 		CommPkg & comm,
 		Sh3Task self,
