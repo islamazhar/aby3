@@ -17,10 +17,10 @@ namespace aby3
 
         void toBinaryMatrix(const sPackedBin& in, sbMatrix<ValueType>& dest);
 
-        Sh3Task toPackedBin(Sh3Task dep, Sh3ShareGen& gen, const si64Matrix& in, sPackedBin& dest);
-        Sh3Task toBinaryMatrix(Sh3Task dep, const si64Matrix& in, sbMatrix<ValueType>& dest);
+        Sh3Task toPackedBin(Sh3Task dep, Sh3ShareGen& gen, const siMatrix<ValueType>& in, sPackedBin& dest);
+        Sh3Task toBinaryMatrix(Sh3Task dep, const siMatrix<ValueType>& in, sbMatrix<ValueType>& dest);
 
-        Sh3Task toSi64Matrix(Sh3Task dep, const sbMatrix<ValueType>& in, si64Matrix& dest);
-        Sh3Task toSi64Matrix(Sh3Task dep, const sPackedBin& in, si64Matrix& dest);
+        Sh3Task toSiMatrix(Sh3Task dep, const sbMatrix<ValueType>& in, siMatrix<ValueType>& dest); // not implemented
+        Sh3Task toSiMatrix(Sh3Task dep, const sPackedBin& in, siMatrix<ValueType>& dest); // not implemented
     };
 }

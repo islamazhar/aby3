@@ -21,12 +21,12 @@ namespace aby3
             MatrixView<u8> inView(
                 (u8*)(s.data()),
                 (u8*)(s.data() + s.size()),
-                sizeof(i64) * s.cols());
+                sizeof(ValueType) * s.cols());
             
             MatrixView<u8> memView(
                 (u8*)(d.data()),
                 (u8*)(d.data() + d.size()),
-                sizeof(i64) * d.cols());
+                sizeof(ValueType) * d.cols());
 
             transpose(inView, memView);
         }
@@ -44,18 +44,18 @@ namespace aby3
             MatrixView<u8> inView(
                 (u8*)(s.data()),
                 (u8*)(s.data() + s.size()),
-                sizeof(i64) * s.cols());
+                sizeof(ValueType) * s.cols());
 
             MatrixView<u8> memView(
                 (u8*)(d.data()),
                 (u8*)(d.data() + d.size()),
-                sizeof(i64) * d.cols());
+                sizeof(ValueType) * d.cols());
 
             transpose(inView, memView);
         }
     }
     template<typename  ValueType>
-    Sh3Task Sh3Converter<ValueType>::toPackedBin(Sh3Task dep, Sh3ShareGen& gen, const si64Matrix& in, sPackedBin& dest)
+    Sh3Task Sh3Converter<ValueType>::toPackedBin(Sh3Task dep, Sh3ShareGen& gen, const siMatrix<ValueType>& in, sPackedBin& dest)
     {
         return dep.then([&](CommPkg & comm, Sh3Task self) {
             struct State {
