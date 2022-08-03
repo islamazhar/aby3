@@ -5,15 +5,16 @@
 using namespace oc;
 namespace aby3
 {
-    void Sh3Evaluator::init(u64 partyIdx, block prevSeed, block nextSeed, u64 buffSize)
+    template<typename ValueType>
+    void Sh3Evaluator<ValueType>::init(u64 partyIdx, block prevSeed, block nextSeed, u64 buffSize)
     {
         mShareGen.init(prevSeed, nextSeed, buffSize);
         mPartyIdx = partyIdx;
         mOtPrev.setSeed(mShareGen.mNextCommon.get<block>());
         mOtNext.setSeed(mShareGen.mPrevCommon.get<block>());
     }
-
-    void Sh3Evaluator::init(u64 partyIdx, CommPkg& comm, block seed, u64 buffSize)
+    template<typename ValueType>
+    void Sh3Evaluator<ValueType>init(u64 partyIdx, CommPkg& comm, block seed, u64 buffSize)
     {
         mShareGen.init(comm, seed, buffSize);
         mPartyIdx = partyIdx;
@@ -21,7 +22,7 @@ namespace aby3
         mOtNext.setSeed(mShareGen.mPrevCommon.get<block>());
     }
 
-    //void Sh3Evaluator::mul(
+    //void Sh3Evaluator<ValueType>mul(
     //	CommPkg& comm,
     //	const si64Matrix& A,
     //	const si64Matrix& B,
@@ -43,7 +44,7 @@ namespace aby3
     //	comm.mPrev.recv(C.mShares[1].data(), C.mShares[1].size());
     //}
 
-    //CompletionHandle Sh3Evaluator::asyncMul(
+    //CompletionHandle Sh3Evaluator<ValueType>asyncMul(
     //    CommPkg& comm, 
     //    const si64Matrix & A, 
     //    const si64Matrix & B, 
@@ -67,8 +68,8 @@ namespace aby3
     //    return { [fu = std::move(fu)](){ fu.get(); } };
     //}
 
-
-    Sh3Task Sh3Evaluator::asyncMul(Sh3Task dependency, const si64& A, const si64& B, si64& C)
+    template<typename ValueType>
+    Sh3Task Sh3Evaluator<ValueType>asyncMul(Sh3Task dependency, const si<ValueType>& A, const si<ValueType>& B, si<ValueType>& C)
     {
         return dependency.then([&](CommPkg& comm, Sh3Task self)
             {
@@ -87,8 +88,8 @@ namespace aby3
             }).getClosure();
     }
 
-
-    Sh3Task Sh3Evaluator::asyncMul(Sh3Task dependency, const si64Matrix& A, const si64Matrix& B, si64Matrix& C)
+    template<typename ValueType>
+    Sh3Task Sh3Evaluator<ValueType>asyncMul(Sh3Task dependency, const si<ValueType>Matrix& A, const si<ValueType>Matrix& B, siMatrix<ValueType>& C)
     {
         return dependency.then([&](CommPkg& comm, Sh3Task self)
             {
@@ -133,19 +134,19 @@ namespace aby3
     //}
 
 
-
-    Sh3Task Sh3Evaluator::asyncMul(
+    template<typename ValueType>
+    Sh3Task Sh3Evaluator<ValueType>asyncMul(
         Sh3Task dep,
-        const si64Matrix& a,
-        const sbi64Matrix & b,
-        si64Matrix& c)
+        const siMatrix<ValueType>& a,
+        const sbMatrix<ValueType> & b,
+        siMatrix<ValueType>& c)
     {
         return dep.then([&](CommPkg& comm, Sh3Task self) {
             switch (mPartyIdx)
             {
             case 0:
             {
-                std::vector<std::array<i64, 2>> s0(a.size());
+                std::vector<std::array<ValueType, 2>> s0(a.size());
                 BitVector c1(a.size());
                 for (u64 i = 0; i < s0.size(); ++i)
                 {
@@ -176,8 +177,8 @@ namespace aby3
 
 
                 auto fu1 = comm.mPrev.asyncRecv(c.mShares[0].data(), c.size()).share();
-                i64* dd = c.mShares[1].data();
-                auto fu2 = SharedOT::asyncRecv(comm.mNext, comm.mPrev, std::move(c1), { dd, i64(c.size()) }).share();
+                ValueType* dd = c.mShares[1].data();
+                auto fu2 = SharedOT::asyncRecv(comm.mNext, comm.mPrev, std::move(c1), { dd, ValueType(c.size()) }).share();
 
                 self.then([
                     fu1 = std::move(fu1),
@@ -190,7 +191,7 @@ namespace aby3
             }
             case 1:
             {
-                std::vector<std::array<i64, 2>> s1(a.size());
+                std::vector<std::array<ValueType, 2>> s1(a.size());
                 BitVector c0(a.size());
                 for (u64 i = 0; i < s1.size(); ++i)
                 {
@@ -220,8 +221,8 @@ namespace aby3
 
 
                 // share 0: from p0 to p1,p2
-                i64* dd = c.mShares[0].data();
-                auto fu1 = SharedOT::asyncRecv(comm.mPrev, comm.mNext, std::move(c0), { dd, i64(c.size()) }).share();
+                ValueType* dd = c.mShares[0].data();
+                auto fu1 = SharedOT::asyncRecv(comm.mPrev, comm.mNext, std::move(c0), { dd, ValueType(c.size()) }).share();
 
                 // share 1:
                 auto fu2 = comm.mNext.asyncRecv(c.mShares[1].data(), c.size()).share();
@@ -242,7 +243,7 @@ namespace aby3
             case 2:
             {
                 BitVector c0(a.size()), c1(a.size());
-                std::vector<i64> s0(a.size()), s1(a.size());
+                std::vector<ValueType> s0(a.size()), s1(a.size());
                 for (u64 i = 0; i < a.size(); ++i)
                 {
                     c0[i] = static_cast<u8>(b.mShares[1](i));
@@ -263,12 +264,12 @@ namespace aby3
                 comm.mPrev.asyncSend(std::move(s1));
 
                 // share 0: from p0 to p1,p2
-                i64* dd0 = c.mShares[1].data();
-                auto fu1 = SharedOT::asyncRecv(comm.mNext, comm.mPrev, std::move(c0), { dd0, i64(c.size()) }).share();
+                ValueType* dd0 = c.mShares[1].data();
+                auto fu1 = SharedOT::asyncRecv(comm.mNext, comm.mPrev, std::move(c0), { dd0, ValueType(c.size()) }).share();
 
                 // share 1: from p1 to p0,p2
-                i64* dd1 = c.mShares[0].data();
-                auto fu2 = SharedOT::asyncRecv(comm.mPrev, comm.mNext, std::move(c1), { dd1, i64(c.size()) }).share();
+                ValueType* dd1 = c.mShares[0].data();
+                auto fu2 = SharedOT::asyncRecv(comm.mPrev, comm.mNext, std::move(c1), { dd1, ValueType(c.size()) }).share();
 
                 self.then([
                     fu1 = std::move(fu1),
@@ -288,12 +289,12 @@ namespace aby3
         ).getClosure();
     }
 
-
-    Sh3Task Sh3Evaluator::asyncMul(
+    template<typename ValueType>
+    Sh3Task Sh3Evaluator<ValueType>asyncMul(
         Sh3Task dep,
-        const i64& a,
-        const sbi64Matrix & b,
-        si64Matrix& c)
+        const ValueType& a,
+        const sbMatrix<ValueType> & b,
+        siMatrix<ValueType>& c)
     {
         return dep.then([&](CommPkg& comm, Sh3Task self) {
             if (b.bitCount() != 1)
@@ -303,7 +304,7 @@ namespace aby3
             {
             case 0:
             {
-                std::vector<std::array<i64, 2>> s0(b.rows());
+                std::vector<std::array<ValueType, 2>> s0(b.rows());
                 for (u64 i = 0; i < s0.size(); ++i)
                 {
                     auto bb = b.mShares[0](i) ^ b.mShares[1](i);
@@ -338,8 +339,8 @@ namespace aby3
                 mOtNext.help(comm.mNext, c0);
                 comm.mPrev.asyncSendCopy(c.mShares[1].data(), c.size());
 
-                i64* dd = c.mShares[0].data();
-                auto fu1 = SharedOT::asyncRecv(comm.mPrev, comm.mNext, std::move(c0), { dd, i64(c.size()) }).share();
+                ValueType* dd = c.mShares[0].data();
+                auto fu1 = SharedOT::asyncRecv(comm.mPrev, comm.mNext, std::move(c0), { dd, ValueType(c.size()) }).share();
                 self.then([fu1 = std::move(fu1)](CommPkg& _, Sh3Task __) mutable {
                     fu1.get();
                 });
@@ -359,8 +360,8 @@ namespace aby3
                 mOtPrev.help(comm.mPrev, c0);
                 comm.mNext.asyncSendCopy(c.mShares[0].data(), c.size());
 
-                i64* dd0 = c.mShares[1].data();
-                auto fu1 = SharedOT::asyncRecv(comm.mNext, comm.mPrev, std::move(c0), { dd0, i64(c.size()) }).share();
+                ValueType* dd0 = c.mShares[1].data();
+                auto fu1 = SharedOT::asyncRecv(comm.mNext, comm.mPrev, std::move(c0), { dd0, ValueType(c.size()) }).share();
 
                 self.then([fu1 = std::move(fu1)](CommPkg& _, Sh3Task __) mutable {
                     fu1.get();
@@ -373,10 +374,10 @@ namespace aby3
             }
         ).getClosure();
     }
-
-    TruncationPair Sh3Evaluator::getTruncationTuple(u64 xSize, u64 ySize, u64 d)
+    template<typename ValueType>
+    TruncationPair Sh3Evaluator<ValueType>::getTruncationTuple(u64 xSize, u64 ySize, u64 d)
     {
-        TruncationPair pair;
+        TruncationPair<ValueType> pair;
         if (DEBUG_disable_randomization)
         {
             pair.mR.resize(xSize, ySize);
@@ -438,12 +439,12 @@ namespace aby3
         }
         return pair;
     }
-
-    Sh3Task aby3::Sh3Evaluator::asyncMul(
+    template<typename ValueType>
+    Sh3Task aby3::Sh3Evaluator<ValueType>asyncMul(
         Sh3Task  dependency,
-        const si64& A,
-        const si64& B,
-        si64& C,
+        const si<ValueType>& A,
+        const si<ValueType>& B,
+        si<ValueType>& C,
         u64 shift)
     {
         return dependency.then([&, shift](CommPkg& comm, Sh3Task& self) -> void {
@@ -491,7 +492,7 @@ namespace aby3
             if (rt.mPartyIdx < 2)
             {
                 // these will hold the three shares of r-xy
-                std::unique_ptr<std::array<i64, 3>> shares(new std::array<i64, 3>);
+                std::unique_ptr<std::array<ValueType, 3>> shares(new std::array<ValueType, 3>);
 
                 // perform the async receives
                 auto fu0 = comm.mNext.asyncRecv((*shares)[0]).share();
@@ -521,19 +522,19 @@ namespace aby3
     }
 
 
-
-    Sh3Task aby3::Sh3Evaluator::asyncMul(
+    template<typename ValueType>
+    Sh3Task aby3::Sh3Evaluator<ValueType>asyncMul(
         Sh3Task dependency,
-        const si64Matrix& A,
-        const si64Matrix& B,
-        si64Matrix& C,
+        const siMatrix<ValueType>& A,
+        const siMatrix<ValueType>& B,
+        siMatrix<ValueType>& C,
         u64 shift)
     {
         return dependency.then([&, shift](CommPkg& comm, Sh3Task& self) -> void {
 
             //oc::lout << self.mRuntime->mPartyIdx << " mult Send" << std::endl;
 
-            i64Matrix abMinusR
+            eMatrix<ValueType> abMinusR
                 = A.mShares[0] * B.mShares[0]
                 + A.mShares[0] * B.mShares[1]
                 + A.mShares[1] * B.mShares[0];

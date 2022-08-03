@@ -7,17 +7,19 @@
 
 namespace aby3
 {
-
+    template<typename ValueType>
     struct TruncationPair
     {
         // the share that should be added before the value being trucnated is revealed.
-        i64Matrix mR;
+        //i64Matrix mR;
+        eMatrix<ValueType>mR;
 
         // the share that thsould be subtracted after the value has been truncated.
-        si64Matrix mRTrunc;
+       // si64Matrix mRTrunc;
+        siMatrix<ValueType> mRTrunc;
     };
 
-
+    template<typename ValueType>
     class Sh3Evaluator
     {
     public:
@@ -41,38 +43,38 @@ namespace aby3
 
 		Sh3Task asyncMul(
 			Sh3Task dependency,
-			const si64& A,
-			const si64& B,
-			si64& C);
+			const si<ValueType>& A,
+			const si<ValueType>& B,
+			si<ValueType>& C);
 
         Sh3Task asyncMul(
             Sh3Task dependency,
-            const si64Matrix& A,
-            const si64Matrix& B,
-            si64Matrix& C);
+            const siMatrix<ValueType>& A,
+            const siMatrix<ValueType>& B,
+            siMatrix<ValueType>& C);
 
 
 		Sh3Task asyncMul(
 			Sh3Task dependency,
-			const si64Matrix& A,
-			const si64Matrix& B,
-			si64Matrix& C,
+			const siMatrix<ValueType>& A,
+			const siMatrix<ValueType>& B,
+			siMatrix<ValueType>& C,
 			u64 shift);
 
 
 		Sh3Task asyncMul(
 			Sh3Task dependency,
-			const si64& A,
-			const si64& B,
-			si64& C,
+			const si<ValueType>& A,
+			const si<ValueType>& B,
+			si<ValueType>& C,
 			u64 shift);
 
         template<Decimal D>
 		Sh3Task asyncMul(
 			Sh3Task dependency,
-			const sf64<D>& A,
-			const sf64<D>& B,
-			sf64<D>& C)
+			const sf<ValueType, D>& A,
+			const sf<ValueType, D>& B,
+			sf<ValueType, D>& C)
 		{
 			return asyncMul(dependency, A.ValueTypeCast(), B.ValueTypeCast(), C.ValueTypeCast(), D);
 		}
@@ -80,9 +82,9 @@ namespace aby3
 		template<Decimal D>
 		Sh3Task asyncMul(
 			Sh3Task dependency,
-			const sf64Matrix<D>& A,
-			const sf64Matrix<D>& B,
-			sf64Matrix<D>& C,
+			const sfMatrix<ValueType, D>& A,
+			const sfMatrix<ValueType, D>& B,
+			sfMatrix<ValueType, D>& C,
 			u64 shift)
 		{
 			return asyncMul(dependency,A.ValueTypeCast(), B.ValueTypeCast(), C.ValueTypeCast(), D + shift);
@@ -91,26 +93,26 @@ namespace aby3
 		template<Decimal D>
 		Sh3Task asyncMul(
 			Sh3Task dependency,
-			const sf64Matrix<D>& A,
-			const sf64Matrix<D>& B,
-			sf64Matrix<D>& C)
+			const sfMatrix<ValueType, D>& A,
+			const sfMatrix<ValueType, D>& B,
+			sfMatrix<ValueType, D>& C)
 		{
 			return asyncMul(dependency,A.ValueTypeCast(), B.ValueTypeCast(), C.ValueTypeCast(), D);
 		}
 
 		Sh3Task asyncMul(
 			Sh3Task dep,
-			const si64Matrix& A,
-			const sbi64Matrix& B,
-			si64Matrix& C);
+			const siMatrix<ValueType>& A,
+			const sbMatrix<ValueType>& B,
+			siMatrix<ValueType>& C);
 
 		Sh3Task asyncMul(
 			Sh3Task dep,
-			const i64& a,
-			const sbi64Matrix& B,
-			si64Matrix& C);
+			const ValueType& a,
+			const sbMatrix<ValueType>& B,
+			siMatrix<ValueType>& C);
 
-        TruncationPair getTruncationTuple(u64 xSize, u64 ySize, u64 d);
+        TruncationPair<ValueType> getTruncationTuple(u64 xSize, u64 ySize, u64 d);
 
         u64 mPartyIdx = -1, mTruncationIdx = 0;
         Sh3ShareGen mShareGen;
