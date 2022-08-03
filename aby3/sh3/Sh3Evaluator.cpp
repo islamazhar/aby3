@@ -13,8 +13,9 @@ namespace aby3
         mOtPrev.setSeed(mShareGen.mNextCommon.get<block>());
         mOtNext.setSeed(mShareGen.mPrevCommon.get<block>());
     }
+
     template<typename ValueType>
-    void Sh3Evaluator<ValueType>init(u64 partyIdx, CommPkg& comm, block seed, u64 buffSize)
+    void Sh3Evaluator<ValueType>::init(u64 partyIdx, CommPkg& comm, block seed, u64 buffSize)
     {
         mShareGen.init(comm, seed, buffSize);
         mPartyIdx = partyIdx;
@@ -69,7 +70,7 @@ namespace aby3
     //}
 
     template<typename ValueType>
-    Sh3Task Sh3Evaluator<ValueType>asyncMul(Sh3Task dependency, const si<ValueType>& A, const si<ValueType>& B, si<ValueType>& C)
+    Sh3Task Sh3Evaluator<ValueType>::asyncMul(Sh3Task dependency, const si<ValueType>& A, const si<ValueType>& B, si<ValueType>& C)
     {
         return dependency.then([&](CommPkg& comm, Sh3Task self)
             {
@@ -89,7 +90,7 @@ namespace aby3
     }
 
     template<typename ValueType>
-    Sh3Task Sh3Evaluator<ValueType>asyncMul(Sh3Task dependency, const si<ValueType>Matrix& A, const si<ValueType>Matrix& B, siMatrix<ValueType>& C)
+    Sh3Task Sh3Evaluator<ValueType>::asyncMul(Sh3Task dependency, const siMatrix<ValueType>& A, const siMatrix<ValueType>& B, siMatrix<ValueType>& C)
     {
         return dependency.then([&](CommPkg& comm, Sh3Task self)
             {
@@ -135,7 +136,7 @@ namespace aby3
 
 
     template<typename ValueType>
-    Sh3Task Sh3Evaluator<ValueType>asyncMul(
+    Sh3Task Sh3Evaluator<ValueType>::asyncMul(
         Sh3Task dep,
         const siMatrix<ValueType>& a,
         const sbMatrix<ValueType> & b,
@@ -290,7 +291,7 @@ namespace aby3
     }
 
     template<typename ValueType>
-    Sh3Task Sh3Evaluator<ValueType>asyncMul(
+    Sh3Task Sh3Evaluator<ValueType>::asyncMul(
         Sh3Task dep,
         const ValueType& a,
         const sbMatrix<ValueType> & b,
@@ -375,7 +376,7 @@ namespace aby3
         ).getClosure();
     }
     template<typename ValueType>
-    TruncationPair Sh3Evaluator<ValueType>::getTruncationTuple(u64 xSize, u64 ySize, u64 d)
+    TruncationPair<ValueType> Sh3Evaluator<ValueType>::getTruncationTuple(u64 xSize, u64 ySize, u64 d)
     {
         TruncationPair<ValueType> pair;
         if (DEBUG_disable_randomization)
@@ -440,7 +441,7 @@ namespace aby3
         return pair;
     }
     template<typename ValueType>
-    Sh3Task aby3::Sh3Evaluator<ValueType>asyncMul(
+    Sh3Task aby3::Sh3Evaluator<ValueType>::asyncMul(
         Sh3Task  dependency,
         const si<ValueType>& A,
         const si<ValueType>& B,
@@ -523,7 +524,7 @@ namespace aby3
 
 
     template<typename ValueType>
-    Sh3Task aby3::Sh3Evaluator<ValueType>asyncMul(
+    Sh3Task aby3::Sh3Evaluator<ValueType>::asyncMul(
         Sh3Task dependency,
         const siMatrix<ValueType>& A,
         const siMatrix<ValueType>& B,
